@@ -42,6 +42,7 @@ dboardtop.init(
         sequelize,
         modelName: 'dboardtop',
         tableName: 'dboardtops', // Specify the table name if it's different from the model name
+        timestamps: true,
     }
 );
 
