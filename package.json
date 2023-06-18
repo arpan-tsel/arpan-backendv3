@@ -1,0 +1,49 @@
+{
+  "name": "arpan-backendv2",
+  "version": "1.0.0",
+  "description": "arpan new backend",
+  "main": "index.ts",
+  "scripts": {
+    "dev": "nodemon ./index.ts --exec ts-node --files",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/arpan-tsel/arpan-backendv2.git"
+  },
+  "author": "",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/arpan-tsel/arpan-backendv2/issues"
+  },
+  "homepage": "https://github.com/arpan-tsel/arpan-backendv2#readme",
+  "dependencies": {
+    "bcrypt": "^5.0.1",
+    "body-parser": "^1.20.0",
+    "cookie-parser": "^1.4.6",
+    "cors": "^2.8.5",
+    "dotenv": "^16.0.2",
+    "excel-date-to-js": "^1.1.5",
+    "express": "^4.18.1",
+    "express-flash": "^0.0.2",
+    "express-session": "^1.17.3",
+    "jsonwebtoken": "^8.5.1",
+    "method-override": "^3.0.0",
+    "multer": "^1.4.5-lts.1",
+    "mysql2": "^2.3.3",
+    "node-cron": "^3.0.2",
+    "nodemailer": "^6.7.8",
+    "nodemon": "^2.0.20",
+    "rand-token": "^1.0.1",
+    "read-excel-file": "^5.5.0",
+    "save": "^2.9.0"
+  },
+  "devDependencies": {
+    "sequelize": "^6.25.4",
+    "sequelize-cli": "^6.4.1",
+    "sequelize-typescript": "^2.1.5",
+    "ts-node": "^10.9.1",
+    "ts-node-dev": "^2.0.0",
+    "typescript": "^4.8.3"
+  }
+}
