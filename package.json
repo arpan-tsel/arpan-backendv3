@@ -2,9 +2,9 @@
   "name": "arpan-backendv2",
   "version": "1.0.0",
   "description": "arpan new backend",
-  "main": "index.ts",
+  "main": "src/index.ts",
   "scripts": {
-    "dev": "nodemon ./index.ts --exec ts-node --files",
+    "dev": "nodemon ./src/index.ts --exec ts-node --files",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
@@ -39,6 +39,19 @@
     "save": "^2.9.0"
   },
   "devDependencies": {
+    "@types/bcrypt": "^5.0.0",
+    "@types/body-parser": "^1.19.2",
+    "@types/cookie-parser": "^1.4.3",
+    "@types/cors": "^2.8.12",
+    "@types/es6-promise": "^3.3.0",
+    "@types/express": "^4.17.14",
+    "@types/express-validator": "^3.0.0",
+    "@types/jsonwebtoken": "^8.5.9",
+    "@types/multer": "^1.4.7",
+    "@types/node": "^18.7.18",
+    "@types/node-cron": "^3.0.6",
+    "@types/nodemailer": "^6.4.6",
+    "@types/sequelize": "^4.28.14",
     "sequelize": "^6.25.4",
     "sequelize-cli": "^6.4.1",
     "sequelize-typescript": "^2.1.5",

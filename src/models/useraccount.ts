@@ -5,8 +5,8 @@ class useraccount extends Model {
     public id!: number;
     public uuid!: string;
     public name?: string | null;
-    public username?: string | null;
-    public password?: string | null;
+    public username!: string;
+    public password!: string;
     public role?: 'admin' | 'regular' | 'quality' | null;
     public employee_title?: string | null;
     public department_id?: number | null;
