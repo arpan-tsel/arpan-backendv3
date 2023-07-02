@@ -6,7 +6,7 @@ import { loginAccount, logoutAccount } from '../controllers/Auth';
 // import { uploadProject, updateDataProject, getDataByIdProject, getAllProjectsdata, getProjectTracking, getKertasKerja, getRequestorProject, filterSelectionProject } from '../controllers/ProjectController';
 // import { InputLchartDept, inputDboardTop, inputLChartDboard, inputPieChartDboard, inputPieChartDept } from '../controllers/VisualizationController';
 // import { getPieChartDashboard, getDboardTop, getLineChartRFCITR, getPieChartBasi, getPieChartDigitalVas, getPieChartPrepaid, getPieChartPostpaid, getLineChartPrepaid, getLineChartBasi, getLineChartDigitalVas, getLineChartPostpaid } from '../controllers/GetVisualization'
-// import { getAllUsers, getUserByIdAccount, getOneUser, createUser, updateUserAccountByAdmin, resetPasswordAccount, deleteUser, refreshTokenAccount, getUserManagement, resetPasswordAccountbyAdm, updateUserAccountRegular } from '../controllers/UserAccountController';
+import { getAllUsers, getUserByIdAccount, getOneUser, createUser, updateUserAccountByAdmin, resetPasswordAccount, deleteUser, refreshTokenAccount, getUserManagement, resetPasswordAccountbyAdm, updateUserAccountRegular } from '../controllers/UserAccountController';
 
 
 const router = express.Router();
@@ -16,28 +16,28 @@ const router = express.Router();
 router.post('/loginAccount', loginAccount);
 router.delete('/logoutAccount', logoutAccount);
 
-// // WARNING: no authorization needed for these routes
-// router.get('/getAllUsers', getAllUsers);
-// router.get('/userAccount', verifyTokenAccount, getOneUser);
-// router.get('/userAccount/:uuid', getUserByIdAccount);
-// router.post('/userAccount', createUser);
-// router.patch('/userAccount/:uuid', updateUserAccountByAdmin);
+// WARNING: no authorization needed for these routes
+router.get('/getAllUsers', getAllUsers);
+router.get('/userAccount', verifyTokenAccount, getOneUser);
+router.get('/userAccount/:uuid', getUserByIdAccount);
+router.post('/userAccount', createUser);
+router.patch('/userAccount/:uuid', updateUserAccountByAdmin);
 
-// // WARNING: is update user account regular doesnt need a body?
-// router.patch('/updateUserAccount/:uuid', updateUserAccountRegular);
+// WARNING: is update user account regular doesnt need a body?
+router.patch('/updateUserAccount/:uuid', updateUserAccountRegular);
 
-// // WARNING: anyone can change the password as long as they know the uuid, is this okay?
-// router.patch('/resetPasswordAccount/:uuid', resetPasswordAccount);
+// WARNING: anyone can change the password as long as they know the uuid, is this okay?
+router.patch('/resetPasswordAccount/:uuid', resetPasswordAccount);
 
-// // WARNING: anyone can delete the user as long as they know the uuid, is this okay?
-// router.delete('/deleteusers/:uuid', deleteUser);
-// router.get('/tokenAccount', refreshTokenAccount);
+// WARNING: anyone can delete the user as long as they know the uuid, is this okay?
+router.delete('/deleteusers/:uuid', deleteUser);
+router.get('/tokenAccount', refreshTokenAccount);
 
-// // WARNING: this is getting all data of the user including the password and refresh token, without any authorication, is this okay?
-// router.get('/getUserManagement', getUserManagement);
+// WARNING: this is getting all data of the user including the password and refresh token, without any authorication, is this okay?
+router.get('/getUserManagement', getUserManagement);
 
-// // WARNING: anyone can change the password as long as they know the uuid, is this okay?
-// router.patch('/resetPasswordAccountAdm/:uuid', resetPasswordAccountbyAdm);
+// WARNING: anyone can change the password as long as they know the uuid, is this okay?
+router.patch('/resetPasswordAccountAdm/:uuid', resetPasswordAccountbyAdm);
 
 // /*
 // *   Visualization Controller
