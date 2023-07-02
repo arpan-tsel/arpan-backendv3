@@ -9,8 +9,8 @@ class useraccount extends Model {
     public password!: string;
     public role?: 'admin' | 'regular' | 'quality' | null;
     public employee_title?: string | null;
-    public department_id?: number | null;
-    public division_id?: number | null;
+    public department?: string | null;
+    public division?: string | null;
     public address?: string | null;
     public phone?: string | null;
     public refreshToken?: string | null;
@@ -66,12 +66,12 @@ useraccount.init(
             type: DataTypes.STRING(100),
             defaultValue: null,
         },
-        department_id: {
-            type: DataTypes.INTEGER,
+        department: {
+            type: DataTypes.STRING(255),
             defaultValue: null,
         },
-        division_id: {
-            type: DataTypes.INTEGER,
+        division: {
+            type: DataTypes.STRING(255),
             defaultValue: null,
         },
         address: {

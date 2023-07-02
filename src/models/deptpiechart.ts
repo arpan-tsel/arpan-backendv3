@@ -3,8 +3,8 @@ import sequelize from '../config/database';
 
 class deptpiechart extends Model {
     public id!: number;
-    public division_id?: number | null;
-    public department_id!: number;
+    public division?: string | null;
+    public department!: string;
     public counter?: number | null;
 }
 
@@ -16,12 +16,12 @@ deptpiechart.init(
             autoIncrement: true,
             allowNull: false,
         },
-        division_id: {
-            type: DataTypes.INTEGER,
+        division: {
+            type: DataTypes.STRING(255),
             defaultValue: null,
         },
-        department_id: {
-            type: DataTypes.INTEGER,
+        department: {
+            type: DataTypes.STRING(255),
             allowNull: false,
             unique: true,
         },

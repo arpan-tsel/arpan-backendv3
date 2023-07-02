@@ -4,7 +4,7 @@ import sequelize from '../config/database';
 class masterdepartment extends Model {
     public id!: number;
     public department!: string;
-    public division_id!: number;
+    public division!: string;
     public readonly createdAt!: Date;
     public readonly updatedAt!: Date;
 }
@@ -21,8 +21,8 @@ masterdepartment.init(
             type: DataTypes.STRING(255),
             allowNull: false,
         },
-        division_id: {
-            type: DataTypes.INTEGER,
+        division: {
+            type: DataTypes.STRING(255),
             allowNull: false,
         },
         createdAt: {

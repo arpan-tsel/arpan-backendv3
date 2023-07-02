@@ -3,7 +3,7 @@ import sequelize from '../config/database';
 
 class reqdivs extends Model {
     public id!: number;
-    public division_id!: number;
+    public division!: string;
     public value?: number | null;
 }
 
@@ -15,8 +15,8 @@ reqdivs.init(
             autoIncrement: true,
             allowNull: false,
         },
-        division_id: {
-            type: DataTypes.INTEGER,
+        division: {
+            type: DataTypes.STRING(255),
             allowNull: false,
         },
         value: {

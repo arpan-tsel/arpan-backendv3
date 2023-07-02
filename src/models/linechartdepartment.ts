@@ -3,8 +3,8 @@ import sequelize from '../config/database';
 
 class linechartdepartment extends Model {
     public id!: number;
-    public division_id?: number | null;
-    public department_id?: number | null;
+    public division?: string | null;
+    public department?: string | null;
     public january!: number;
     public february!: number;
     public march!: number;
@@ -27,12 +27,12 @@ linechartdepartment.init(
             autoIncrement: true,
             allowNull: false,
         },
-        division_id: {
-            type: DataTypes.INTEGER,
+        division: {
+            type: DataTypes.STRING(255),
             defaultValue: null,
         },
-        department_id: {
-            type: DataTypes.INTEGER,
+        department: {
+            type: DataTypes.STRING(255),
             defaultValue: null,
         },
         january: {
