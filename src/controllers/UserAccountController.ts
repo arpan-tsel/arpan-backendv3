@@ -92,7 +92,7 @@ export const createUser = async (req: Request, res: Response) => {
 
 //update user account 
 export const updateUserAccountByAdmin = async (req: Request, res: Response) => {
-    const { name, username, role, password, employee_title, department, division, sub_directorate, address, phone } = req.body;
+    const { name, username, role, password, employee_title, department, division, address, phone } = req.body;
     if (password.length < 8 || password.length > 24) return res.status(400).json({ msg: "password minimal 8 chars dan maksimal 24 chars" });
     const salt = await bcrypt.genSalt();
     const hashPassword = await bcrypt.hash(password, salt);
@@ -105,7 +105,6 @@ export const updateUserAccountByAdmin = async (req: Request, res: Response) => {
             employee_title: employee_title,
             department: department,
             division: division,
-            sub_directorate: sub_directorate,
             address: address,
             phone: phone
         },

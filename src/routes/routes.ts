@@ -7,7 +7,7 @@ import { loginAccount, logoutAccount } from '../controllers/Auth';
 // import { InputLchartDept, inputDboardTop, inputLChartDboard, inputPieChartDboard, inputPieChartDept } from '../controllers/VisualizationController';
 // import { getPieChartDashboard, getDboardTop, getLineChartRFCITR, getPieChartBasi, getPieChartDigitalVas, getPieChartPrepaid, getPieChartPostpaid, getLineChartPrepaid, getLineChartBasi, getLineChartDigitalVas, getLineChartPostpaid } from '../controllers/GetVisualization'
 import { getAllUsers, getUserByIdAccount, getOneUser, createUser, updateUserAccountByAdmin, resetPasswordAccount, deleteUser, refreshTokenAccount, getUserManagement, resetPasswordAccountbyAdm, updateUserAccountRegular } from '../controllers/UserAccountController';
-
+import { getAllDepartments, getOneDepartment, createDepartment, updateDepartment, deleteDepartment, getDepartmentManagement } from '../controllers/DepartmentsController';
 
 const router = express.Router();
 
@@ -87,9 +87,12 @@ router.patch('/resetPasswordAccountAdm/:uuid', resetPasswordAccountbyAdm);
 /*
 *   Departments and Division Routes
 */
-// router.post('/addDepartment');
-// router.put('/editDepartment');
-// router.get('/getDepartments');
+router.get('/getAllDepartments', getAllDepartments);
+router.get('/department', getOneDepartment);
+router.post('/department', createDepartment);
+router.patch('/department/:uuid', updateDepartment);
+router.delete('/department/:uuid', deleteDepartment);
+router.get('/getDepartmentManagement', getDepartmentManagement);
 
 // router.post('/addDivision');
 // router.get('/getDivisions');
