@@ -8,6 +8,7 @@ import { loginAccount, logoutAccount } from '../controllers/Auth';
 // import { getPieChartDashboard, getDboardTop, getLineChartRFCITR, getPieChartBasi, getPieChartDigitalVas, getPieChartPrepaid, getPieChartPostpaid, getLineChartPrepaid, getLineChartBasi, getLineChartDigitalVas, getLineChartPostpaid } from '../controllers/GetVisualization'
 import { getAllUsers, getUserByIdAccount, getOneUser, createUser, updateUserAccountByAdmin, resetPasswordAccount, deleteUser, refreshTokenAccount, getUserManagement, resetPasswordAccountbyAdm, updateUserAccountRegular } from '../controllers/UserAccountController';
 import { getAllDepartments, getOneDepartment, createDepartment, updateDepartment, deleteDepartment, getDepartmentManagement } from '../controllers/DepartmentsController';
+import { getAllDivisions, getOneDivision, createDivision, updateDivision, deleteDivision, getDivisionManagement } from '../controllers/DivisionController';
 
 const router = express.Router();
 
@@ -85,17 +86,24 @@ router.patch('/resetPasswordAccountAdm/:uuid', resetPasswordAccountbyAdm);
 
 
 /*
-*   Departments and Division Routes
+*   Departments Routes
 */
 router.get('/getAllDepartments', getAllDepartments);
-router.get('/department', getOneDepartment);
+router.get('/department/:id', getOneDepartment);
 router.post('/department', createDepartment);
-router.patch('/department/:uuid', updateDepartment);
-router.delete('/department/:uuid', deleteDepartment);
+router.patch('/department/:id', updateDepartment);
+router.delete('/department/:id', deleteDepartment);
 router.get('/getDepartmentManagement', getDepartmentManagement);
 
-// router.post('/addDivision');
-// router.get('/getDivisions');
+/*
+*   Divisions Routes
+*/
+router.get('/getAllDivisions', getAllDivisions);
+router.get('/division/:id', getOneDivision);
+router.post('/division', createDivision);
+router.patch('/division/:id', updateDivision);
+router.delete('/division/:id', deleteDivision);
+router.get('/getDivisionManagement', getDivisionManagement);
 
 
 export default router;

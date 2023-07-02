@@ -27,11 +27,10 @@ export const getAllDepartments = async (req: Request, res: Response) => {
 
 //get department by id
 export const getOneDepartment = async (req: Request, res: Response) => {
-    const { department } = req.body;
     try {
         const departments = await masterdepartment.findOne({
             where: {
-                department: department
+                id: req.params.id
             }
         });
         res.json(departments)
