@@ -26,6 +26,7 @@ useraccount.init(
         },
         uuid: {
             type: DataTypes.STRING(255),
+            defaultValue: DataTypes.UUIDV4,
             allowNull: false,
         },
         name: {
