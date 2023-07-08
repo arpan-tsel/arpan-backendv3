@@ -1,9 +1,9 @@
 import express from 'express';
 
 import { verifyTokenAccount } from "../middlewares/verifyToken";
-// import { uploadFile } from '../middleware/uploadExcel';
+import { uploadFile } from '../middlewares/uploadExcel';
 import { loginAccount, logoutAccount } from '../controllers/Auth';
-// import { uploadProject, updateDataProject, getDataByIdProject, getAllProjectsdata, getProjectTracking, getKertasKerja, getRequestorProject, filterSelectionProject } from '../controllers/ProjectController';
+import { uploadProject, updateDataProject, getDataByIdProject, getAllProjectsdata, getProjectTracking, getKertasKerja, getRequestorProject, filterSelectionProject } from '../controllers/ProjectController';
 // import { InputLchartDept, inputDboardTop, inputLChartDboard, inputPieChartDboard, inputPieChartDept } from '../controllers/VisualizationController';
 // import { getPieChartDashboard, getDboardTop, getLineChartRFCITR, getPieChartBasi, getPieChartDigitalVas, getPieChartPrepaid, getPieChartPostpaid, getLineChartPrepaid, getLineChartBasi, getLineChartDigitalVas, getLineChartPostpaid } from '../controllers/GetVisualization'
 import { getAllUsers, getUserByIdAccount, getOneUser, createUser, updateUserAccountByAdmin, resetPasswordAccount, deleteUser, refreshTokenAccount, getUserManagement, resetPasswordAccountbyAdm, updateUserAccountRegular } from '../controllers/UserAccountController';
@@ -57,7 +57,7 @@ router.patch('/resetPasswordAccountAdm/:uuid', resetPasswordAccountbyAdm);
 // router.get('/linechartdashboard', getLineChartRFCITR);
 
 // /*
-// *   Visualization Pie Chart Departmen
+// *   Visualization Pie Chart Department
 // */
 // router.get('/getpiechartbasi', getPieChartBasi);
 // router.get('/getpiechartdigitalvas', getPieChartDigitalVas);
@@ -75,14 +75,14 @@ router.patch('/resetPasswordAccountAdm/:uuid', resetPasswordAccountbyAdm);
 // /*
 // *   Project Controller
 // */
-// router.post("/uploadproject", uploadFile.single("file"), uploadProject);
-// router.get("/getAllProject", getAllProjectsdata);
-// router.get("/projectTracking", getProjectTracking);
-// router.get('/requestorProject', getRequestorProject);
-// router.get('/datasProject/:id_project', getDataByIdProject);
-// router.patch('/datasProject/:id_project', updateDataProject);
-// router.get('/filterselectionproject', filterSelectionProject);
-// router.get('/kertaskerja', getKertasKerja);
+router.post("/uploadproject", uploadFile.single("file"), uploadProject);
+router.get("/getAllProject", getAllProjectsdata);
+router.get("/projectTracking", getProjectTracking);
+router.get('/requestorProject', getRequestorProject);
+router.get('/datasProject/:id_project', getDataByIdProject);
+router.patch('/datasProject/:id_project', updateDataProject);
+router.get('/filterselectionproject', filterSelectionProject);
+router.get('/kertaskerja', getKertasKerja);
 
 /*
 *   Divisions Controller
