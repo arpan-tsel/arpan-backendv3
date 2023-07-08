@@ -17,11 +17,12 @@ require('dotenv').config();
 export const getAllDepartments = async (req: Request, res: Response) => {
     try {
         const departments = await masterdepartment.findAll({
-            attributes: ['id', 'department', 'divison']
+            attributes: ['id', 'department', 'division']
         });
-        res.json(departments)
-    } catch (error) {
-        res.status(500).json(error);
+        res.status(200).json(departments)
+    } catch (error: any) {
+        console.log(error);
+        res.status(500).json({ message: error.message })
     }
 }
 
@@ -30,44 +31,47 @@ export const getOneDepartment = async (req: Request, res: Response) => {
     try {
         const departments = await masterdepartment.findOne({
             where: {
-                id: req.params.id
+                id: req.query.id
             }
         });
-        res.json(departments)
-    } catch (error) {
+        res.status(200).json(departments)
+    } catch (error: any) {
         console.log(error);
+        res.status(500).json({ message: error.message })
     }
 }
 
 //create department
 export const createDepartment = async (req: Request, res: Response) => {
-    const { department, divison } = req.body;
+    const { department, division } = req.body;
     try {
         const departments = await masterdepartment.create({
             department: department,
-            divison: divison
+            division: division
         });
-        res.json(departments)
-    } catch (error) {
+        res.status(200).json({ message: "Department Created", departments })
+    } catch (error: any) {
         console.log(error);
+        res.status(500).json({ message: error.message })
     }
 }
 
 //update department
 export const updateDepartment = async (req: Request, res: Response) => {
-    const { department, divison } = req.body;
+    const { department, division } = req.body;
     try {
         const departments = await masterdepartment.update({
             department: department,
-            divison: divison
+            division: division
         }, {
             where: {
-                id: req.params.id
+                id: req.query.id
             }
         });
-        res.json(departments)
-    } catch (error) {
+        res.status(200).json({ message: "Department Updated", departments })
+    } catch (error: any) {
         console.log(error);
+        res.status(500).json({ message: error.message })
     }
 }
 
@@ -77,12 +81,13 @@ export const deleteDepartment = async (req: Request, res: Response) => {
     try {
         const departments = await masterdepartment.destroy({
             where: {
-                id: req.params.id
+                id: req.query.id
             }
         });
-        res.json(departments)
-    } catch (error) {
+        res.status(200).json({ message: "Department Deleted", departments })
+    } catch (error: any) {
         console.log(error);
+        res.status(500).json({ message: error.message })
     }
 }
 

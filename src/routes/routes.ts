@@ -84,26 +84,24 @@ router.patch('/resetPasswordAccountAdm/:uuid', resetPasswordAccountbyAdm);
 // router.get('/filterselectionproject', filterSelectionProject);
 // router.get('/kertaskerja', getKertasKerja);
 
-
 /*
-*   Departments Routes
-*/
-router.get('/getAllDepartments', getAllDepartments);
-router.get('/department/:id', getOneDepartment);
-router.post('/department', createDepartment);
-router.patch('/department/:id', updateDepartment);
-router.delete('/department/:id', deleteDepartment);
-router.get('/getDepartmentManagement', getDepartmentManagement);
-
-/*
-*   Divisions Routes
+*   Divisions Controller
 */
 router.get('/getAllDivisions', getAllDivisions);
-router.get('/division/:id', getOneDivision);
+router.get('/division', getOneDivision);
 router.post('/division', createDivision);
-router.patch('/division/:id', updateDivision);
-router.delete('/division/:id', deleteDivision);
+router.patch('/division', updateDivision);
+router.delete('/division', deleteDivision);
 router.get('/getDivisionManagement', getDivisionManagement);
 
+/*
+*   Departments Controller
+*/
+router.get('/getAllDepartments', getAllDepartments);
+router.get('/department', getOneDepartment);
+router.post('/department', createDepartment);
+router.patch('/department', updateDepartment);
+router.delete('/department', deleteDepartment);
+router.get('/getDepartmentManagement', getDepartmentManagement);
 
 export default router;

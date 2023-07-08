@@ -19,9 +19,10 @@ export const getAllDivisions = async (req: Request, res: Response) => {
         const divisions = await masterdivision.findAll({
             attributes: ['id', 'division', 'sub_directorate']
         });
-        res.json(divisions)
-    } catch (error) {
-        res.status(500).json(error);
+        res.status(200).json(divisions)
+    } catch (error: any) {
+        console.log(error);
+        res.status(500).json({ message: error.message })
     }
 }
 
@@ -30,12 +31,13 @@ export const getOneDivision = async (req: Request, res: Response) => {
     try {
         const divisions = await masterdivision.findOne({
             where: {
-                id: req.params.id
+                id: req.query.id
             }
         });
-        res.json(divisions)
-    } catch (error) {
+        res.status(200).json(divisions)
+    } catch (error: any) {
         console.log(error);
+        res.status(500).json({ message: error.message })
     }
 }
 
@@ -47,27 +49,30 @@ export const createDivision = async (req: Request, res: Response) => {
             division: division,
             sub_directorate: sub_directorate
         });
-        res.json(divisions)
-    } catch (error) {
+        res.status(200).json({ message: "Division Created", divisions })
+    } catch (error: any) {
         console.log(error);
+        res.status(500).json({ message: error.message })
     }
 }
 
 //update division
 export const updateDivision = async (req: Request, res: Response) => {
     const { division, sub_directorate } = req.body;
+    console.log(division, sub_directorate)
     try {
         const divisions = await masterdivision.update({
             division: division,
             sub_directorate: sub_directorate
         }, {
             where: {
-                division: req.params.id
+                id: req.query.id
             }
         });
-        res.json(divisions)
-    } catch (error) {
+        res.status(200).json({ message: "Division Updated", divisions })
+    } catch (error: any) {
         console.log(error);
+        res.status(500).json({ message: error.message })
     }
 }
 
@@ -76,12 +81,13 @@ export const deleteDivision = async (req: Request, res: Response) => {
     try {
         const divisions = await masterdivision.destroy({
             where: {
-                id: req.params.id
+                id: req.query.id
             }
         });
-        res.json(divisions)
-    } catch (error) {
+        res.status(200).json({ message: "Division Deleted", divisions })
+    } catch (error: any) {
         console.log(error);
+        res.status(500).json({ message: error.message })
     }
 }
 
