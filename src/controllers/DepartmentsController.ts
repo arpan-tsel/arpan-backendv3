@@ -17,7 +17,7 @@ require('dotenv').config();
 export const getAllDepartments = async (req: Request, res: Response) => {
     try {
         const departments = await masterdepartment.findAll({
-            attributes: ['id', 'department', 'division']
+            attributes: ['id', 'department', 'division', 'devTitle'],
         });
         res.status(200).json(departments)
     } catch (error: any) {
@@ -43,11 +43,12 @@ export const getOneDepartment = async (req: Request, res: Response) => {
 
 //create department
 export const createDepartment = async (req: Request, res: Response) => {
-    const { department, division } = req.body;
+    const { department, division, devTitle } = req.body;
     try {
         const departments = await masterdepartment.create({
             department: department,
-            division: division
+            division: division,
+            devTitle: devTitle,
         });
         res.status(200).json({ message: "Department Created", departments })
     } catch (error: any) {
@@ -58,16 +59,22 @@ export const createDepartment = async (req: Request, res: Response) => {
 
 //update department
 export const updateDepartment = async (req: Request, res: Response) => {
-    const { department, division } = req.body;
+    const { department, division, devTitle } = req.body;
     try {
         const departments = await masterdepartment.update({
             department: department,
-            division: division
+            division: division,
+            devTitle: devTitle,
         }, {
             where: {
                 id: req.query.id
             }
         });
+
+        // if department not found
+        if (departments[0] === 0) {
+            return res.status(404).json({ message: "Department Not Found" })
+        }
         res.status(200).json({ message: "Department Updated", departments })
     } catch (error: any) {
         console.log(error);
@@ -84,6 +91,10 @@ export const deleteDepartment = async (req: Request, res: Response) => {
                 id: req.query.id
             }
         });
+        // if department not found
+        if (departments === 0) {
+            return res.status(404).json({ message: "Department Not Found" })
+        }
         res.status(200).json({ message: "Department Deleted", departments })
     } catch (error: any) {
         console.log(error);

@@ -69,6 +69,9 @@ export const updateDivision = async (req: Request, res: Response) => {
                 id: req.query.id
             }
         });
+        if (divisions[0] === 0) {
+            return res.status(404).json({ message: "Division Not Found" })
+        }
         res.status(200).json({ message: "Division Updated", divisions })
     } catch (error: any) {
         console.log(error);
@@ -84,6 +87,9 @@ export const deleteDivision = async (req: Request, res: Response) => {
                 id: req.query.id
             }
         });
+        if (divisions === 0) {
+            return res.status(404).json({ message: "Division Not Found" })
+        }
         res.status(200).json({ message: "Division Deleted", divisions })
     } catch (error: any) {
         console.log(error);
