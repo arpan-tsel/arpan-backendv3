@@ -117,11 +117,15 @@ export const getDepartmentManagement = async (req: TypedRequestQuery<{ lastId: s
     const totalRows = await masterdepartment.count({
         where: {
             [Op.or]: [{
-                name: {
+                division: {
                     [Op.like]: '%' + search + '%'
                 }
             }, {
-                username: {
+                department: {
+                    [Op.like]: '%' + search + '%'
+                }
+            }, {
+                devTitle: {
                     [Op.like]: '%' + search + '%'
                 }
             }]
@@ -132,11 +136,15 @@ export const getDepartmentManagement = async (req: TypedRequestQuery<{ lastId: s
         raw: true,
         where: {
             [Op.or]: [{
-                name: {
+                division: {
                     [Op.like]: '%' + search + '%'
                 }
             }, {
-                username: {
+                department: {
+                    [Op.like]: '%' + search + '%'
+                }
+            }, {
+                devTitle: {
                     [Op.like]: '%' + search + '%'
                 }
             }]

@@ -112,11 +112,11 @@ export const getDivisionManagement = async (req: TypedRequestQuery<{ lastId: str
     const totalRows = await masterdivision.count({
         where: {
             [Op.or]: [{
-                name: {
+                division: {
                     [Op.like]: '%' + search + '%'
                 }
             }, {
-                username: {
+                sub_directorate: {
                     [Op.like]: '%' + search + '%'
                 }
             }]
@@ -127,11 +127,11 @@ export const getDivisionManagement = async (req: TypedRequestQuery<{ lastId: str
         raw: true,
         where: {
             [Op.or]: [{
-                name: {
+                division: {
                     [Op.like]: '%' + search + '%'
                 }
             }, {
-                username: {
+                sub_directorate: {
                     [Op.like]: '%' + search + '%'
                 }
             }]
