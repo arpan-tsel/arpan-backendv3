@@ -33,7 +33,7 @@ export const inputPieChartDboard = async () => {
 
     inputdb.forEach(function (index: any) {
         promises.push(reqDiv.update({ value: index.counter }, {
-            where: { divKey: index.division }
+            where: { division: index.division }
         }))
 
     });
