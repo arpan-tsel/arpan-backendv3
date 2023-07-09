@@ -121,32 +121,28 @@ export const uploadProject = async (req: Request, res: Response) => {
 //get project data by id
 export const getDataByIdProject = async (req: Request, res: Response) => {
   try {
-    const datas = await Project.findOne({
+    const datas: any = await Project.findOne({
       raw: true,
       where: {
         id_project: req.params.id_project
       }
-    }).then((data: any) => {
-      data.forEach((datas: any) => {
-        Object.keys(datas).forEach((element: any, i: any, arr: any) => {
-          if (datas[element]) { datas[element] = datas[element].toString().replace(/_x000D_/g, ' ') }
-        })
-      })
-
-      data.forEach((datas: any) => {
-        Object.keys(datas).forEach((element: any, i: any, arr: any) => {
-          if (new Date(`1899-12-30`).getFullYear() == new Date(`${datas[element]}`).getFullYear()) { datas[element] = null }
-        })
-      })
-
-      console.log(req.params.id_project)
-
-      res.send(datas)
     })
+
+    Object.keys(datas).forEach((element: any, i: any, arr: any) => {
+      if (datas[element]) { datas[element] = datas[element].toString().replace(/_x000D_/g, ' ') }
+    })
+
+    Object.keys(datas).forEach((element: any, i: any, arr: any) => {
+      if (new Date(`1899-12-30`).getFullYear() == new Date(`${datas[element]}`).getFullYear()) { datas[element] = null }
+    })
+
+    res.send(datas)
+
   } catch (error) {
     console.log(error);
   }
 }
+
 
 //update project data
 export const updateDataProject = async (req: Request, res: Response) => {
