@@ -19,6 +19,9 @@ require('dotenv').config();
 
 //get all users
 export const getAllUsers = async (req: Request, res: Response) => {
+
+    if (req.body.role !== 'admin') return res.status(403).json({ msg: "Forbidden" });
+
     try {
         const users = await useraccount.findAll({
             attributes: ['id', 'uuid', 'name', 'username', 'role']
@@ -92,6 +95,9 @@ export const createUser = async (req: Request, res: Response) => {
 
 //update user account 
 export const updateUserAccountByAdmin = async (req: Request, res: Response) => {
+
+    if (req.body.role !== 'admin') return res.status(403).json({ msg: "Forbidden" });
+
     const { name, username, role, password, employee_title, department, division, address, phone } = req.body;
     if (password.length < 8 || password.length > 24) return res.status(400).json({ msg: "password minimal 8 chars dan maksimal 24 chars" });
     const salt = await bcrypt.genSalt();
@@ -167,6 +173,9 @@ export const resetPasswordAccount = async (req: Request, res: Response) => {
 
 //update password by regular role
 export const resetPasswordAccountbyAdm = async (req: Request, res: Response) => {
+
+    if (req.body.role !== 'admin') return res.status(403).json({ msg: "Forbidden" });
+
     try {
         const { password } = req.body;
         console.log(password.length);
@@ -241,6 +250,7 @@ export interface TypedRequestQuery<T extends Query> extends Express.Request {
 }
 
 export const getUserManagement = async (req: TypedRequestQuery<{ lastId: string, limit: string, search_query: string, page: string }>, res: Response) => {
+
     const page = parseInt(req.query.page) || 0;
     const limit = parseInt(req.query.limit) || 10;
     const search = req.query.search_query || "";

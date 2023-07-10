@@ -1,6 +1,7 @@
 import express from 'express';
 
 import { verifyTokenAccount } from "../middlewares/verifyToken";
+import { verifyRefreshToken } from "../middlewares/verifyRefreshToken";
 import { uploadFile } from '../middlewares/uploadExcel';
 import { loginAccount, logoutAccount } from '../controllers/Auth';
 import { uploadProject, updateDataProject, getDataByIdProject, getAllProjectsdata, getProjectTracking, getKertasKerja, getRequestorProject, filterSelectionProject } from '../controllers/ProjectController';
@@ -16,29 +17,17 @@ const router = express.Router();
 //user account & auth
 router.post('/loginAccount', loginAccount);
 router.delete('/logoutAccount', logoutAccount);
-
-// WARNING: no authorization needed for these routes
-router.get('/getAllUsers', getAllUsers);
+router.get('/getAllUsers', verifyRefreshToken, getAllUsers);
 router.get('/userAccount', verifyTokenAccount, getOneUser);
 router.get('/userAccount/:uuid', getUserByIdAccount);
 router.post('/userAccount', createUser);
-router.patch('/userAccount/:uuid', updateUserAccountByAdmin);
-
-// WARNING: is update user account regular doesnt need a body?
+router.patch('/userAccount/:uuid', verifyRefreshToken, updateUserAccountByAdmin);
 router.patch('/updateUserAccount/:uuid', updateUserAccountRegular);
-
-// WARNING: anyone can change the password as long as they know the uuid, is this okay?
 router.patch('/resetPasswordAccount/:uuid', resetPasswordAccount);
-
-// WARNING: anyone can delete the user as long as they know the uuid, is this okay?
 router.delete('/deleteusers/:uuid', deleteUser);
 router.get('/tokenAccount', refreshTokenAccount);
-
-// WARNING: this is getting all data of the user including the password and refresh token, without any authorication, is this okay?
 router.get('/getUserManagement', getUserManagement);
-
-// WARNING: anyone can change the password as long as they know the uuid, is this okay?
-router.patch('/resetPasswordAccountAdm/:uuid', resetPasswordAccountbyAdm);
+router.patch('/resetPasswordAccountAdm/:uuid', verifyRefreshToken, resetPasswordAccountbyAdm);
 
 // /*
 // *   Visualization Controller

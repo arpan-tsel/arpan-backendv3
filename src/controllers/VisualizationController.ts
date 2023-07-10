@@ -10,7 +10,6 @@
 // import db from '../models';
 import { Op } from 'sequelize';
 import { queryDboardTopRFCITR, queryDboardTopRFSRFI, queryLChartDept, queryLchartYearBfrDboard, queryLChartYearNowDboard, queryPieChartDboard, queryPieChartDept, queryGetMasterDivision } from './Queries'
-import Sequelize from 'sequelize';
 import sequelize from '../config/database';
 
 let db: any = {}
@@ -18,7 +17,6 @@ db.sequelize = sequelize
 
 import reqDiv from '../models/reqdivs'
 import deptPieChart from "../models/deptpiechart";
-import Project from '../models/project'
 
 var promises: any[] = [];
 
@@ -376,65 +374,6 @@ export const inputPieChartDept = async () => {
         type: db.sequelize.QueryTypes.SELECT,
         raw: true
     });
-
-    // // get master division from masterdivision table
-    // const getMasterdivision = await db.sequelize.query(queryGetMasterDivision, {
-    //     type: db.sequelize.QueryTypes.SELECT,
-    //     raw: true
-    // })
-
-    // for (let i = 0; i < inputdbRaw.length; i++) {
-    //     for (let j = 0; j < getMasterdivision.length; j++) {
-
-    //         // continue if the title_dev is null
-    //         if (inputdbRaw[i].title_dev == null) {
-    //             continue;
-    //         }
-
-    //         let inputdbtitledev = inputdbRaw[i].title_dev
-    //         let getMasterdivisiontitledev = getMasterdivision[j].devTitle
-
-    //         // remove spaces to ensure the title is same
-    //         inputdbtitledev = inputdbtitledev.replace(/\s+/g, ' '); // remove multiple spaces
-    //         inputdbtitledev = inputdbtitledev.replace("_x000D_", "") // remove _x000D_
-    //         inputdbtitledev = inputdbtitledev.toLowerCase() // convert to lowercase
-    //         getMasterdivisiontitledev = getMasterdivisiontitledev.replace(/\s+/g, ' '); // remove multiple spaces
-    //         getMasterdivisiontitledev = getMasterdivisiontitledev.toLowerCase() // convert to lowercase
-
-    //         if (inputdbtitledev == getMasterdivisiontitledev) {
-
-    //             inputdbRaw[i].division = getMasterdivision[j].division
-    //             inputdbRaw[i].department = getMasterdivision[j].department
-
-    //             // remove title_dev from inputdbRaw
-    //             delete inputdbRaw[i].title_dev
-
-    //         }
-    //     }
-    // }
-
-    // // combine same department
-    // let inputdb = inputdbRaw;
-    // //  combine object that have same division and department
-    // for (let i = 0; i < inputdb.length; i++) {
-    //     for (let j = 0; j < inputdb.length; j++) {
-    //         if (i != j) {
-    //             if (inputdb[i].division == inputdb[j].division && inputdb[i].department == inputdb[j].department) {
-    //                 inputdb[i].counter += inputdb[j].counter
-    //                 inputdb.splice(j, 1);
-    //                 j--;
-    //             }
-    //         }
-    //     }
-    // }
-
-    // // remove object that doesnt have department or division
-    // for (let i = 0; i < inputdb.length; i++) {
-    //     if (inputdb[i].division == null || inputdb[i].department == null) {
-    //         inputdb.splice(i, 1);
-    //         i--;
-    //     }
-    // }
 
     console.log(inputdb)
 

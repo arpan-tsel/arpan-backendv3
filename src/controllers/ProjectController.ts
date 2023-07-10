@@ -13,10 +13,8 @@
 import readXlsxFile from 'read-excel-file/node';
 import Sequelize from 'sequelize';
 import { Request, Response } from "express";
-import { Cell } from 'read-excel-file/types';
 import { Op } from 'sequelize';
 import { Query } from 'express-serve-static-core';
-import { queryProject } from './Queries';
 import { inputDboardTop, inputPieChartDboard, InputLchartDept, inputLChartDboard, inputPieChartDept } from './VisualizationController';
 
 //const Project = models.projects;
