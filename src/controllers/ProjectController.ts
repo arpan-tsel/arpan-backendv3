@@ -17,7 +17,7 @@ import { Cell } from 'read-excel-file/types';
 import { Op } from 'sequelize';
 import { Query } from 'express-serve-static-core';
 import { queryProject } from './Queries';
-// import { inputDboardTop, inputPieChartDboard, InputLchartDept, inputLChartDboard, inputPieChartDept } from './VisualizationController';
+import { inputDboardTop, inputPieChartDboard, InputLchartDept, inputLChartDboard, inputPieChartDept } from './VisualizationController';
 
 //const Project = models.projects;
 import Project from '../models/project'
@@ -84,20 +84,20 @@ export const uploadProject = async (req: Request, res: Response) => {
           message: 'uploaded the file successfully: ' + req.file?.originalname,
         });
 
-        // try {
+        try {
 
-        //   inputDboardTop();
-        //   inputLChartDboard();
-        //   inputPieChartDboard();
-        //   inputPieChartDept();
-        //   InputLchartDept();
+          inputDboardTop();
+          inputLChartDboard();
+          inputPieChartDboard();
+          inputPieChartDept();
+          InputLchartDept();
 
-        // } catch (error: any) {
-        //   console.log(error);
-        //   res.status(500).send({
-        //     message: "Failed to input dashboard data: " + error?.message,
-        //   });
-        // }
+        } catch (error: any) {
+          console.log(error);
+          res.status(500).send({
+            message: "Failed to input dashboard data: " + error?.message,
+          });
+        }
       }).catch((error: any) => {
         console.log(error);
         res.status(500).send({

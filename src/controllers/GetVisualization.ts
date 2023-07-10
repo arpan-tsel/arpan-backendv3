@@ -26,28 +26,25 @@ import linechartdepartment from "../models/linechartdepartment";
 
 export const getPieChartDashboard = async (req: Request, res: Response) => {
     try {
-        const piechartdahsboard = await reqDiv.findAll({
-            where: {
-                [Op.or]: [{
-                    id: 1
-                },
-                {
-                    id: 2
-                },
-                {
-                    id: 3
-                },
-                {
-                    id: 4
-                },
-                ]
-            }
-        })
+        const piechartdahsboard = await reqDiv.findAll()
         res.json(piechartdahsboard)
     } catch (error) {
         res.send(error)
     }
+}
 
+export const getPieChartDivision = async (req: Request, res: Response) => {
+    const { division } = req.body
+    try {
+        const piechartdivision = await deptPieChart.findAll({
+            where: {
+                division: division
+            }
+        })
+        res.json(piechartdivision)
+    } catch (error) {
+        res.send(error)
+    }
 }
 
 export const getPieChartBasi = async (req: Request, res: Response) => {
@@ -103,8 +100,6 @@ export const getPieChartPostpaid = async (req: Request, res: Response) => {
     }
 }
 
-
-
 export const getLineChartRFCITR = async (req: Request, res: Response) => {
     try {
         const linechartdashboard = await rfcitrs.findAll({
@@ -133,6 +128,22 @@ export const getDboardTop = async (req: Request, res: Response) => {
             }
         })
         res.send(topdboard)
+    } catch (error) {
+        res.send(error)
+    }
+}
+
+export const getLineChartDivision = async (req: Request, res: Response) => {
+    const { division } = req.body
+    try {
+        const linechartdivision = await linechartdepartment.findAll({
+            where: {
+                division: division
+            },
+            attributes: ['january', 'february', 'march', 'april', 'may', 'june', 'july', 'august', 'september', 'october', 'november', 'december', 'department']
+        })
+        console.log(linechartdivision)
+        res.json(linechartdivision)
     } catch (error) {
         res.send(error)
     }

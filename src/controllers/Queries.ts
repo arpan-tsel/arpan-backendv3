@@ -78,10 +78,15 @@ export var queryProject = '\
   '
 
 //get data for dashboard pie chart 
+// export var queryPieChartDboard = '\
+//     SELECT masterdivisions.division,  count(*) AS counter from projects LEFT OUTER JOIN masterdivisions ON projects.title_dev = masterdivisions.devTitle  \
+//     WHERE projects.date_nodin_rfcitr BETWEEN date_format(curdate(), :thnpiechart) \
+//     AND curdate() GROUP BY masterdivisions.division ORDER BY masterdivisions.division\
+// '
 export var queryPieChartDboard = '\
-    SELECT masterdivisions.division,  count(*) AS counter from projects LEFT OUTER JOIN masterdivisions ON projects.title_dev = masterdivisions.devTitle  \
+    SELECT masterdepartments.division,  count(*) AS counter from projects LEFT OUTER JOIN masterdepartments ON projects.title_dev = masterdepartments.devTitle  \
     WHERE projects.date_nodin_rfcitr BETWEEN date_format(curdate(), :thnpiechart) \
-    AND curdate() GROUP BY masterdivisions.division ORDER BY masterdivisions.division\
+    AND curdate() GROUP BY masterdepartments.division ORDER BY masterdepartments.division\
 '
 
 //get data for dashboard rfs rfi
@@ -122,12 +127,20 @@ export var queryLchartYearBfrDboard = '\
 '
 
 //get the pie chart for visualization menu
+// export var queryPieChartDept = '\
+//     SELECT masterdivisions.division, masterdivisions.department,  count(*) AS counter \
+//     from projects LEFT OUTER JOIN masterdivisions ON projects.title_dev = masterdivisions.devTitle \
+//     WHERE (projects.date_nodin_rfsrfi BETWEEN date_format(curdate(), :ytddept) \
+//     AND curdate()) and projects.pic_dev IS NOT NULL and projects.status = "done" \
+//      GROUP BY masterdivisions.division, masterdivisions.department ORDER BY masterdivisions.division \
+// '
+
 export var queryPieChartDept = '\
-    SELECT masterdivisions.division, masterdivisions.department,  count(*) AS counter \
-    from projects LEFT OUTER JOIN masterdivisions ON projects.title_dev = masterdivisions.devTitle \
+    SELECT masterdepartments.division, masterdepartments.department,  count(*) AS counter \
+    from projects LEFT OUTER JOIN masterdepartments ON projects.title_dev = masterdepartments.devTitle \
     WHERE (projects.date_nodin_rfsrfi BETWEEN date_format(curdate(), :ytddept) \
     AND curdate()) and projects.pic_dev IS NOT NULL and projects.status = "done" \
-     GROUP BY masterdivisions.division, masterdivisions.department ORDER BY masterdivisions.division \
+     GROUP BY masterdepartments.division, masterdepartments.department ORDER BY masterdepartments.division \
 '
 
 //get the line chart for visualization menu
@@ -144,7 +157,7 @@ export var queryLChartDept = '\
 '
 
 export let queryGetMasterDivision = '\
-    SELECT * FROM masterdivisions \
+    SELECT * FROM masterdepartments \
 '
 
 

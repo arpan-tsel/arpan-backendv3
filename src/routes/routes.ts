@@ -4,8 +4,8 @@ import { verifyTokenAccount } from "../middlewares/verifyToken";
 import { uploadFile } from '../middlewares/uploadExcel';
 import { loginAccount, logoutAccount } from '../controllers/Auth';
 import { uploadProject, updateDataProject, getDataByIdProject, getAllProjectsdata, getProjectTracking, getKertasKerja, getRequestorProject, filterSelectionProject } from '../controllers/ProjectController';
-// import { InputLchartDept, inputDboardTop, inputLChartDboard, inputPieChartDboard, inputPieChartDept } from '../controllers/VisualizationController';
-// import { getPieChartDashboard, getDboardTop, getLineChartRFCITR, getPieChartBasi, getPieChartDigitalVas, getPieChartPrepaid, getPieChartPostpaid, getLineChartPrepaid, getLineChartBasi, getLineChartDigitalVas, getLineChartPostpaid } from '../controllers/GetVisualization'
+import { InputLchartDept, inputDboardTop, inputLChartDboard, inputPieChartDboard, inputPieChartDept } from '../controllers/VisualizationController';
+import { getPieChartDashboard, getDboardTop, getLineChartRFCITR, getPieChartBasi, getPieChartDigitalVas, getPieChartPrepaid, getPieChartPostpaid, getLineChartPrepaid, getLineChartBasi, getLineChartDigitalVas, getLineChartPostpaid, getPieChartDivision, getLineChartDivision } from '../controllers/GetVisualization'
 import { getAllUsers, getUserByIdAccount, getOneUser, createUser, updateUserAccountByAdmin, resetPasswordAccount, deleteUser, refreshTokenAccount, getUserManagement, resetPasswordAccountbyAdm, updateUserAccountRegular } from '../controllers/UserAccountController';
 import { getAllDepartments, getOneDepartment, createDepartment, updateDepartment, deleteDepartment, getDepartmentManagement } from '../controllers/DepartmentsController';
 import { getAllDivisions, getOneDivision, createDivision, updateDivision, deleteDivision, getDivisionManagement } from '../controllers/DivisionController';
@@ -43,34 +43,36 @@ router.patch('/resetPasswordAccountAdm/:uuid', resetPasswordAccountbyAdm);
 // /*
 // *   Visualization Controller
 // */
-// router.get('/inputpiechartdboard', inputPieChartDboard);
-// router.get('/inputdboardtop', inputDboardTop);
-// router.get('/inputlchartdboard', inputLChartDboard);
-// router.get('/inputpiechartdept', inputPieChartDept);
-// router.get('/linechartdept', InputLchartDept);
+router.get('/inputpiechartdboard', inputPieChartDboard);
+router.get('/inputdboardtop', inputDboardTop);
+router.get('/inputlchartdboard', inputLChartDboard);
+router.get('/inputpiechartdept', inputPieChartDept);
+router.get('/linechartdept', InputLchartDept);
 
 // /*
 // *   Get Dashboard
 // */
-// router.get('/piechartdashboard', getPieChartDashboard);
-// router.get('/getdboardtop', getDboardTop);
-// router.get('/linechartdashboard', getLineChartRFCITR);
+router.get('/piechartdashboard', getPieChartDashboard);
+router.get('/getdboardtop', getDboardTop);
+router.get('/linechartdashboard', getLineChartRFCITR);
 
 // /*
 // *   Visualization Pie Chart Department
 // */
-// router.get('/getpiechartbasi', getPieChartBasi);
-// router.get('/getpiechartdigitalvas', getPieChartDigitalVas);
-// router.get('/getpiechartpointer', getPieChartPostpaid);
-// router.get('/getpiechartprepaid', getPieChartPrepaid);
+router.get('/getpiechartbasi', getPieChartBasi);
+router.get('/getpiechartdigitalvas', getPieChartDigitalVas);
+router.get('/getpiechartpointer', getPieChartPostpaid);
+router.get('/getpiechartprepaid', getPieChartPrepaid);
+router.post('/getpiechartdivision', getPieChartDivision);
 
 // /*
 // *   Get Visualization Line Chart Department
 // */
-// router.get('/getlinechartbasi', getLineChartBasi);
-// router.get('/getlinechartdigitalvas', getLineChartDigitalVas);
-// router.get('/getlinechartpointer', getLineChartPostpaid);
-// router.get('/getlinechartprepaid', getLineChartPrepaid);
+router.get('/getlinechartbasi', getLineChartBasi);
+router.get('/getlinechartdigitalvas', getLineChartDigitalVas);
+router.get('/getlinechartpointer', getLineChartPostpaid);
+router.get('/getlinechartprepaid', getLineChartPrepaid);
+router.post('/getlinechartdivision', getLineChartDivision);
 
 // /*
 // *   Project Controller
