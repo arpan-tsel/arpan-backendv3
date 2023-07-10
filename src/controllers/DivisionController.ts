@@ -31,7 +31,7 @@ export const getOneDivision = async (req: Request, res: Response) => {
     try {
         const divisions = await masterdivision.findOne({
             where: {
-                id: req.query.id
+                id: req.params.id
             }
         });
         res.status(200).json(divisions)
@@ -66,7 +66,7 @@ export const updateDivision = async (req: Request, res: Response) => {
             sub_directorate: sub_directorate
         }, {
             where: {
-                id: req.query.id
+                id: req.params.id
             }
         });
         if (divisions[0] === 0) {
@@ -84,7 +84,7 @@ export const deleteDivision = async (req: Request, res: Response) => {
     try {
         const divisions = await masterdivision.destroy({
             where: {
-                id: req.query.id
+                id: req.params.id
             }
         });
         if (divisions === 0) {

@@ -31,7 +31,7 @@ export const getOneDepartment = async (req: Request, res: Response) => {
     try {
         const departments = await masterdepartment.findOne({
             where: {
-                id: req.query.id
+                id: req.params.id
             }
         });
         res.status(200).json(departments)
@@ -67,7 +67,7 @@ export const updateDepartment = async (req: Request, res: Response) => {
             devTitle: devTitle,
         }, {
             where: {
-                id: req.query.id
+                id: req.params.id
             }
         });
 
@@ -88,7 +88,7 @@ export const deleteDepartment = async (req: Request, res: Response) => {
     try {
         const departments = await masterdepartment.destroy({
             where: {
-                id: req.query.id
+                id: req.params.id
             }
         });
         // if department not found

@@ -90,20 +90,20 @@ router.get('/kertaskerja', getKertasKerja);
 *   Divisions Controller
 */
 router.get('/getAllDivisions', getAllDivisions);
-router.get('/division', getOneDivision);
+router.get('/division/:id', getOneDivision);
 router.post('/division', createDivision);
-router.patch('/division', updateDivision);
-router.delete('/division', deleteDivision);
+router.patch('/division/:id', updateDivision);
+router.delete('/division/:id', deleteDivision);
 router.get('/getDivisionManagement', getDivisionManagement);
 
 /*
 *   Departments Controller
 */
 router.get('/getAllDepartments', getAllDepartments);
-router.get('/department', getOneDepartment);
+router.get('/department/:id', getOneDepartment);
 router.post('/department', createDepartment);
-router.patch('/department', updateDepartment);
-router.delete('/department', deleteDepartment);
+router.patch('/department/:id', updateDepartment);
+router.delete('/department/:id', deleteDepartment);
 router.get('/getDepartmentManagement', getDepartmentManagement);
 
 export default router;
