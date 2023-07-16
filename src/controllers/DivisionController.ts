@@ -8,10 +8,13 @@
 // - getDivisionManagement : table division management (Read)
 
 import { Request, Response } from "express";
-import masterdivision from '../models/masterdivision'
+import sequelize from '../config/database';
 import { Op } from 'sequelize';
 import { Query } from 'express-serve-static-core';
 require('dotenv').config();
+
+// models
+import masterdivision from '../models/masterdivision'
 
 //get all divisions
 export const getAllDivisions = async (req: Request, res: Response) => {
@@ -81,19 +84,34 @@ export const updateDivision = async (req: Request, res: Response) => {
 
 //delete division
 export const deleteDivision = async (req: Request, res: Response) => {
+    const transaction = await sequelize.transaction();
     try {
+
+        await sequelize.query('SET foreign_key_checks = 0', { transaction });
+
         const divisions = await masterdivision.destroy({
             where: {
                 id: req.params.id
             }
         });
+
+        await sequelize.query('SET foreign_key_checks = 1', { transaction });
+
+        // Commit the transaction
+        await transaction.commit();
+
         if (divisions === 0) {
             return res.status(404).json({ message: "Division Not Found" })
         }
+
         res.status(200).json({ message: "Division Deleted", divisions })
+
     } catch (error: any) {
+
+        await transaction.rollback();
         console.log(error);
         res.status(500).json({ message: error.message })
+
     }
 }
 

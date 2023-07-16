@@ -9,8 +9,7 @@
 
 import { Request, Response } from "express";
 import sequelize from '../config/database';
-import { QueryTypes } from 'sequelize';
-import { Op, where } from 'sequelize';
+import { Op } from 'sequelize';
 import { Query } from 'express-serve-static-core';
 require('dotenv').config();
 
@@ -171,11 +170,15 @@ export const deleteDepartment = async (req: Request, res: Response) => {
         if (departments === 0) {
             return res.status(404).json({ message: "Department Not Found" })
         }
+
         res.status(200).json({ message: "Department Deleted" })
+
     } catch (error: any) {
+
         await transaction.rollback();
         console.log(error);
         res.status(500).json({ message: error.message })
+        
     }
 }
 
