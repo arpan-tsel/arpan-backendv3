@@ -194,7 +194,7 @@ export const getDepartmentManagement = async (req: TypedRequestQuery<{ lastId: s
         offset: offset,
         limit: limit,
         include: [
-            { model: masterdivision, as: 'masterdivision' } // Include the associated division model with alias 'masterdivision'
+            { model: masterdivision, as: 'masterdivision', required: true } // Include the associated division model with alias 'masterdivision'
         ],
         order: [
             ['id', 'ASC']

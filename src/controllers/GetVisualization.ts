@@ -22,6 +22,8 @@ import deptPieChart from "../models/deptpiechart";
 import rfcitrs from "../models/rfcitrs";
 import dboardtop from "../models/dboardtop";
 import linechartdepartment from "../models/linechartdepartment";
+import masterdivision from "../models/masterdivision";
+import masterdepartment from "../models/masterdepartment";
 
 
 export const getPieChartDashboard = async (req: Request, res: Response) => {
@@ -34,16 +36,39 @@ export const getPieChartDashboard = async (req: Request, res: Response) => {
 }
 
 export const getPieChartDivision = async (req: Request, res: Response) => {
-    const { division } = req.body
+
+    const { division } = req.body;
     try {
         const piechartdivision = await deptPieChart.findAll({
-            where: {
-                division: division
-            }
-        })
-        res.json(piechartdivision)
-    } catch (error) {
-        res.send(error)
+            include: [
+                {
+                    model: masterdepartment,
+                    as: 'masterdepartment',
+                    required: true,
+                    include: [
+                        {
+                            model: masterdivision,
+                            as: 'masterdivision',
+                            required: true,
+                            where: {
+                                division: { [Op.like]: `%${division}%` }
+                            }
+                        }
+                    ]
+                }
+            ]
+        });
+
+        const result = piechartdivision.map((piechart) => ({
+            id: piechart.id,
+            division: piechart.masterdepartment ? piechart.masterdepartment.masterdivision.division : null,
+            department: piechart.masterdepartment ? piechart.masterdepartment.department : null,
+            counter: piechart.counter,
+        }));
+
+        res.json(result);
+    } catch (error: any) {
+        res.status(500).json({ error: error.message });
     }
 }
 
@@ -137,13 +162,44 @@ export const getLineChartDivision = async (req: Request, res: Response) => {
     const { division } = req.body
     try {
         const linechartdivision = await linechartdepartment.findAll({
-            where: {
-                division: division
-            },
-            attributes: ['january', 'february', 'march', 'april', 'may', 'june', 'july', 'august', 'september', 'october', 'november', 'december', 'department']
+            include: [
+                {
+                    model: masterdepartment,
+                    as: 'masterdepartment',
+                    required: true,
+                    include: [
+                        {
+                            model: masterdivision,
+                            as: 'masterdivision',
+                            required: true,
+                            where: {
+                                division: { [Op.like]: `%${division}%` }
+                            }
+                        }
+                    ]
+                }
+            ],
+            // attributes: ['january', 'february', 'march', 'april', 'may', 'june', 'july', 'august', 'september', 'october', 'november', 'december', 'department']
         })
-        console.log(linechartdivision)
-        res.json(linechartdivision)
+
+        const result = linechartdivision.map((linechart) => ({
+            id: linechart.id,
+            division: linechart.masterdepartment ? linechart.masterdepartment.masterdivision.division : null,
+            department: linechart.masterdepartment ? linechart.masterdepartment.department : null,
+            january: linechart.january,
+            february: linechart.february,
+            march: linechart.march,
+            april: linechart.april,
+            may: linechart.may,
+            june: linechart.june,
+            july: linechart.july,
+            august: linechart.august,
+            september: linechart.september,
+            october: linechart.october,
+            november: linechart.november,
+            december: linechart.december,
+        }));
+        res.json(result)
     } catch (error) {
         res.send(error)
     }

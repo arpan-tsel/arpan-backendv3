@@ -1,7 +1,9 @@
 import { Model, DataTypes } from 'sequelize';
 import sequelize from '../config/database';
+import Department from './masterdepartment';
 
 class useraccount extends Model {
+    [x: string]: any;
     public id!: number;
     public uuid!: string;
     public name?: string | null;
@@ -14,6 +16,8 @@ class useraccount extends Model {
     public address?: string | null;
     public phone?: string | null;
     public refreshToken?: string | null;
+
+    public readonly department!: Department;
 }
 
 useraccount.init(
@@ -91,5 +95,10 @@ useraccount.init(
         timestamps: true,
     }
 );
+
+// Define the association between masterdepartment and division
+useraccount.belongsTo(Department, {
+    foreignKey: 'department_id',
+});
 
 export default useraccount;

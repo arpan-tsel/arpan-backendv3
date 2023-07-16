@@ -1,7 +1,10 @@
 import { Model, DataTypes } from 'sequelize';
 import sequelize from '../config/database';
+import Department from './masterdepartment'; // Import the Division model if not already imported
+
 
 class linechartdepartment extends Model {
+    [x: string]: any;
     public id!: number;
     // division
     public department_id?: number | null;
@@ -17,6 +20,8 @@ class linechartdepartment extends Model {
     public october!: number;
     public november!: number;
     public december!: number;
+
+    public readonly department!: Department;
 }
 
 linechartdepartment.init(
@@ -87,5 +92,10 @@ linechartdepartment.init(
         timestamps: true,
     }
 );
+
+// Define the association between masterdepartment and division
+linechartdepartment.belongsTo(Department, {
+    foreignKey: 'department_id',
+});
 
 export default linechartdepartment;

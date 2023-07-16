@@ -1,11 +1,16 @@
 import { Model, DataTypes } from 'sequelize';
 import sequelize from '../config/database';
+import Department from './masterdepartment'; // Import the Division model if not already imported
+
 
 class deptpiechart extends Model {
+    [x: string]: any;
     public id!: number;
     // division
     public department_id!: number;
     public counter?: number | null;
+
+    public readonly department!: Department;
 }
 
 deptpiechart.init(
@@ -33,5 +38,10 @@ deptpiechart.init(
         timestamps: true,
     }
 );
+
+// Define the association between masterdepartment and division
+deptpiechart.belongsTo(Department, {
+    foreignKey: 'department_id',
+});
 
 export default deptpiechart;
