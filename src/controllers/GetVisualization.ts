@@ -97,7 +97,19 @@ export const getPieChartDivision = async (req: Request, res: Response) => {
         // Convert the groupedResult object back to an array
         const mergedResult = Object.values(groupedResult);
 
+        // sort by division
+        mergedResult.sort((a, b) => {
+            if (a.department < b.department) {
+                return -1;
+            }
+            if (a.department > b.department) {
+                return 1;
+            }
+            return 0;
+        });
+
         res.json(mergedResult);
+
     } catch (error: any) {
         res.status(500).json({ error: error.message });
     }
@@ -241,7 +253,62 @@ export const getLineChartDivision = async (req: Request, res: Response) => {
             id: linechart.id,
         }));
 
-        res.json(result)
+        // Group the piechartdivision based on division and department
+        const groupedResult: Record<string, any> = {};
+
+        result.forEach((linechart) => {
+            const { id, department, january, february, march, april, may, june, july, august, september, october, november, december } = linechart;
+
+            const key = `${department}`;
+
+            if (groupedResult[key]) {
+                groupedResult[key].january += january;
+                groupedResult[key].february += february;
+                groupedResult[key].march += march;
+                groupedResult[key].april += april;
+                groupedResult[key].may += may;
+                groupedResult[key].june += june;
+                groupedResult[key].july += july;
+                groupedResult[key].august += august;
+                groupedResult[key].september += september;
+                groupedResult[key].october += october;
+                groupedResult[key].november += november;
+                groupedResult[key].december += december;
+            } else {
+                groupedResult[key] = {
+                    january,
+                    february,
+                    march,
+                    april,
+                    may,
+                    june,
+                    july,
+                    august,
+                    september,
+                    october,
+                    november,
+                    december,
+                    department,
+                    id,
+                };
+            }
+        });
+
+        // Convert object to array
+        const mergedResult = Object.keys(groupedResult).map((key) => groupedResult[key]);
+
+        //sort by department
+        mergedResult.sort((a, b) => {
+            if (a.department < b.department) {
+                return -1;
+            }
+            if (a.department > b.department) {
+                return 1;
+            }
+            return 0;
+        });
+
+        res.json(mergedResult)
 
     } catch (error) {
 

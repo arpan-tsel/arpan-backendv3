@@ -17,6 +17,7 @@ db.sequelize = sequelize
 
 import reqDiv from '../models/reqdivs'
 import deptPieChart from "../models/deptpiechart";
+import linechartdepartment from '../models/linechartdepartment';
 import masterdepartment from '../models/masterdepartment';
 
 var promises: any[] = [];
@@ -57,6 +58,22 @@ export const inputPieChartDboard = async () => {
 
 //line chart visualization
 export const InputLchartDept = async () => {
+
+    const monthsMap: any = {
+        January: "january",
+        February: "february",
+        March: "march",
+        April: "april",
+        May: "may",
+        June: "june",
+        July: "july",
+        August: "august",
+        September: "september",
+        October: "october",
+        November: "november",
+        December: "december",
+    };
+
     db.sequelize.query('DELETE FROM linechartdepartments;', {
         type: db.sequelize.QueryTypes.DELETE,
         raw: true
@@ -68,149 +85,180 @@ export const InputLchartDept = async () => {
         raw: true
     })
 
-    let inputdb: any[] = []
-    for (let i = 0; i < inputdbRaw.length; i++) {
+    inputdbRaw.forEach(function (index: any) {
 
-        if (i == 0) {
-            inputdb.push(inputdbRaw[i])
-        } else {
-            let isTitleExist = false
-            let isMonthExist = false
-            for (let j = 0; j < inputdb.length; j++) {
+        const monthKey = monthsMap[index.month];
+        const updateData = { [monthKey]: index.counter };
 
-                let inputdbtitledev = inputdb[j].title_dev
-                let inputdbtitledevraw = inputdbRaw[i].title_dev
-
-                // remove spaces to ensure the title is same
-                inputdbtitledev = inputdbtitledev.replace(/\s+/g, ' ');
-                inputdbtitledevraw = inputdbtitledevraw.replace(/\s+/g, ' ');
-
-                if (inputdbtitledev == inputdbtitledevraw && inputdb[j].month == inputdbRaw[i].month) {
-                    isTitleExist = true
-                    isMonthExist = true
-                    inputdb[j].counter += inputdbRaw[i].counter
-                    break;
+        promises.push(
+            linechartdepartment.findOrCreate({
+                where: { department_id: index.department_id },
+                defaults: updateData,
+            }).then(([record, created]) => {
+                if (!created) {
+                    // Record already existed, perform the update
+                    return record.update(updateData);
                 }
-            }
-            if (!isTitleExist && !isMonthExist) {
-                inputdb.push(inputdbRaw[i])
-            }
-        }
-    }
+            })
+        );
 
-    // get master division from masterdivision table
-    const getMasterdivision = await db.sequelize.query(queryGetMasterDivision, {
-        type: db.sequelize.QueryTypes.SELECT,
-        raw: true
+    });
+    Promise.all(promises).then(function () {
+
+        console.log('sukses')
+
+    }, function (err) {
+
+        console.log(err);
+
     })
 
 
-    // insert division and department to inputdb
-    for (let i = 0; i < inputdb.length; i++) {
-        for (let j = 0; j < getMasterdivision.length; j++) {
 
-            let inputdbtitledev = inputdb[i].title_dev
-            let masterdivisiondevtitle = getMasterdivision[j].devTitle
 
-            inputdbtitledev = inputdbtitledev.replace("_x000D_", "")
+    // let inputdb: any[] = []
+    // for (let i = 0; i < inputdbRaw.length; i++) {
 
-            // remove spaces to ensure the title is same
-            inputdbtitledev = inputdbtitledev.replace(/\s+/g, ' ');
-            masterdivisiondevtitle = masterdivisiondevtitle.replace(/\s+/g, ' ');
+    //     if (i == 0) {
+    //         inputdb.push(inputdbRaw[i])
+    //     } else {
+    //         let isTitleExist = false
+    //         let isMonthExist = false
+    //         for (let j = 0; j < inputdb.length; j++) {
 
-            if (inputdbtitledev == masterdivisiondevtitle) {
-                // add getMasterdivision.division to inputdb.division and getMasterdivision.department to inputdb.department
-                inputdb[i].division = getMasterdivision[j].division
-                inputdb[i].department = getMasterdivision[j].department
-                inputdb[i].department_id = getMasterdivision[j].department_id
-                break;
-            }
-        }
-    }
+    //             let inputdbtitledev = inputdb[j].title_dev
+    //             let inputdbtitledevraw = inputdbRaw[i].title_dev
 
-    // remove object that doesnt have division and department from inputdb
-    for (let i = 0; i < inputdb.length; i++) {
-        if (inputdb[i].division == null || inputdb[i].department == null) {
-            inputdb.splice(i, 1);
-            i--;
-        }
-    }
+    //             // remove spaces to ensure the title is same
+    //             inputdbtitledev = inputdbtitledev.replace(/\s+/g, ' ');
+    //             inputdbtitledevraw = inputdbtitledevraw.replace(/\s+/g, ' ');
 
-    //  combine object that have same division and department
-    for (let i = 0; i < inputdb.length; i++) {
-        for (let j = 0; j < inputdb.length; j++) {
-            if (i != j) {
-                if (inputdb[i].division == inputdb[j].division && inputdb[i].department == inputdb[j].department && inputdb[i].month == inputdb[j].month) {
-                    inputdb[i].counter += inputdb[j].counter
-                    inputdb.splice(j, 1);
-                    j--;
-                }
-            }
-        }
-    }
+    //             if (inputdbtitledev == inputdbtitledevraw && inputdb[j].month == inputdbRaw[i].month) {
+    //                 isTitleExist = true
+    //                 isMonthExist = true
+    //                 inputdb[j].counter += inputdbRaw[i].counter
+    //                 break;
+    //             }
+    //         }
+    //         if (!isTitleExist && !isMonthExist) {
+    //             inputdb.push(inputdbRaw[i])
+    //         }
+    //     }
+    // }
 
-    // order by department
-    inputdb.sort(function (a, b) {
-        var nameA = a.department.toUpperCase(); // ignore upper and lowercase
-        var nameB = b.department.toUpperCase(); // ignore upper and lowercase
-        if (nameA < nameB) {
-            return -1;
-        }
-        if (nameA > nameB) {
-            return 1
-        }
-        return 0;
-    })
+    // // get master division from masterdivision table
+    // const getMasterdivision = await db.sequelize.query(queryGetMasterDivision, {
+    //     type: db.sequelize.QueryTypes.SELECT,
+    //     raw: true
+    // })
 
-    console.log(inputdb)
 
-    let currentDepartment = ' '
-    let monthList = ' '
-    let counterList = ' '
-    let stringg = ' '
-    inputdb.forEach((element: any, index: any, arr: any[]) => {
+    // // insert division and department to inputdb
+    // for (let i = 0; i < inputdb.length; i++) {
+    //     for (let j = 0; j < getMasterdivision.length; j++) {
 
-        if (currentDepartment == element.department) {
-            stringg = stringg + ', '
-            monthList = monthList + ', '
-            counterList = counterList + ', '
-        }
-        if (currentDepartment == "") {
-            currentDepartment = element.department
-            stringg = `("${element.department_id}", `
-        }
-        if (currentDepartment != element.department) {
-            if (currentDepartment != " ") {
-                stringg = stringg + ' '
-                try {
-                    const update = db.sequelize.query(`INSERT INTO linechartdepartments (department_id, ${monthList}) VALUES ${stringg})`, {
-                        type: db.sequelize.QueryTypes.INSERT,
-                        raw: true
-                    });
-                } catch (err) {
-                    console.log(err);
-                }
-                monthList = ' '
-            }
-            currentDepartment = element.department;
-            stringg = '';
-            stringg = `("${element.department_id}", `
-        }
-        monthList += element.month
-        stringg = stringg + element.counter
+    //         let inputdbtitledev = inputdb[i].title_dev
+    //         let masterdivisiondevtitle = getMasterdivision[j].devTitle
 
-        if (index === arr.length - 1) {
-            stringg = stringg + ' '
-            try {
-                const update = db.sequelize.query(`INSERT INTO linechartdepartments (department_id, ${monthList}) VALUES ${stringg})`, {
-                    type: db.sequelize.QueryTypes.INSERT,
-                    raw: true
-                });
-            } catch (err) {
-                console.log(err);
-            }
-        }
-    })
+    //         inputdbtitledev = inputdbtitledev.replace("_x000D_", "")
+
+    //         // remove spaces to ensure the title is same
+    //         inputdbtitledev = inputdbtitledev.replace(/\s+/g, ' ');
+    //         masterdivisiondevtitle = masterdivisiondevtitle.replace(/\s+/g, ' ');
+
+    //         if (inputdbtitledev == masterdivisiondevtitle) {
+    //             // add getMasterdivision.division to inputdb.division and getMasterdivision.department to inputdb.department
+    //             inputdb[i].division = getMasterdivision[j].division
+    //             inputdb[i].department = getMasterdivision[j].department
+    //             inputdb[i].department_id = getMasterdivision[j].department_id
+    //             break;
+    //         }
+    //     }
+    // }
+
+    // // remove object that doesnt have division and department from inputdb
+    // for (let i = 0; i < inputdb.length; i++) {
+    //     if (inputdb[i].division == null || inputdb[i].department == null) {
+    //         inputdb.splice(i, 1);
+    //         i--;
+    //     }
+    // }
+
+    // //  combine object that have same division and department
+    // for (let i = 0; i < inputdb.length; i++) {
+    //     for (let j = 0; j < inputdb.length; j++) {
+    //         if (i != j) {
+    //             if (inputdb[i].division == inputdb[j].division && inputdb[i].department == inputdb[j].department && inputdb[i].month == inputdb[j].month) {
+    //                 inputdb[i].counter += inputdb[j].counter
+    //                 inputdb.splice(j, 1);
+    //                 j--;
+    //             }
+    //         }
+    //     }
+    // }
+
+    // // order by department
+    // inputdb.sort(function (a, b) {
+    //     var nameA = a.department.toUpperCase(); // ignore upper and lowercase
+    //     var nameB = b.department.toUpperCase(); // ignore upper and lowercase
+    //     if (nameA < nameB) {
+    //         return -1;
+    //     }
+    //     if (nameA > nameB) {
+    //         return 1
+    //     }
+    //     return 0;
+    // })
+
+    // console.log(inputdb)
+
+    // let currentDepartment = ' '
+    // let monthList = ' '
+    // let counterList = ' '
+    // let stringg = ' '
+    // inputdb.forEach((element: any, index: any, arr: any[]) => {
+
+    //     if (currentDepartment == element.department) {
+    //         stringg = stringg + ', '
+    //         monthList = monthList + ', '
+    //         counterList = counterList + ', '
+    //     }
+    //     if (currentDepartment == "") {
+    //         currentDepartment = element.department
+    //         stringg = `("${element.department_id}", `
+    //     }
+    //     if (currentDepartment != element.department) {
+    //         if (currentDepartment != " ") {
+    //             stringg = stringg + ' '
+    //             try {
+    //                 const update = db.sequelize.query(`INSERT INTO linechartdepartments (department_id, ${monthList}) VALUES ${stringg})`, {
+    //                     type: db.sequelize.QueryTypes.INSERT,
+    //                     raw: true
+    //                 });
+    //             } catch (err) {
+    //                 console.log(err);
+    //             }
+    //             monthList = ' '
+    //         }
+    //         currentDepartment = element.department;
+    //         stringg = '';
+    //         stringg = `("${element.department_id}", `
+    //     }
+    //     monthList += element.month
+    //     stringg = stringg + element.counter
+
+    //     if (index === arr.length - 1) {
+    //         stringg = stringg + ' '
+    //         try {
+    //             const update = db.sequelize.query(`INSERT INTO linechartdepartments (department_id, ${monthList}) VALUES ${stringg})`, {
+    //                 type: db.sequelize.QueryTypes.INSERT,
+    //                 raw: true
+    //             });
+    //         } catch (err) {
+    //             console.log(err);
+    //         }
+    //     }
+    // })
 }
 
 

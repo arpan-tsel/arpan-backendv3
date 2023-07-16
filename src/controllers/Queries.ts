@@ -152,10 +152,18 @@ export var queryPieChartDept = '\
 //     WHERE (projects.date_nodin_rfsrfi between date_format(curdate(), :ytdlinedept) and curdate()) and projects.pic_dev IS NOT NULL and projects.status = "done"\
 //     group by masterdivisions.department, month(date_nodin_rfsrfi) order by masterdivisions.department \
 // '
+// export var queryLChartDept = '\
+//     SELECT title_dev, MONTHNAME(date_nodin_rfcitr) AS month, COUNT(type_nodin) AS counter FROM projects \
+//     WHERE projects.date_nodin_rfcitr BETWEEN DATE_FORMAT(CURDATE(), :ytdlinedept) AND CURDATE() \
+//     GROUP BY title_dev, MONTH(date_nodin_rfcitr), date_nodin_rfcitr \
+// '
 export var queryLChartDept = '\
-    SELECT title_dev, MONTHNAME(date_nodin_rfcitr) AS month, COUNT(type_nodin) AS counter FROM projects \
-    WHERE projects.date_nodin_rfcitr BETWEEN DATE_FORMAT(CURDATE(), :ytdlinedept) AND CURDATE() \
-    GROUP BY title_dev, MONTH(date_nodin_rfcitr), date_nodin_rfcitr \
+    SELECT masterdivisions.division AS division, masterdepartments.id AS department_id, masterdepartments.department AS department, monthname(date_nodin_rfsrfi) AS month, \
+    count(*) as counter FROM projects \
+    LEFT JOIN masterdepartments ON projects.title_dev = masterdepartments.devTitle \
+    LEFT JOIN masterdivisions ON masterdepartments.division_id = masterdivisions.id \
+    WHERE (projects.date_nodin_rfsrfi between date_format(curdate(), :ytdlinedept) and curdate()) and projects.pic_dev IS NOT NULL and projects.status = "done"\
+    group by masterdepartments.id, monthname(date_nodin_rfsrfi) order by masterdepartments.id \
 '
 
 // export let queryGetMasterDivision = '\
