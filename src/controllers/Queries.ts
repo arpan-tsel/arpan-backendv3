@@ -84,7 +84,7 @@ export var queryProject = '\
 //     AND curdate() GROUP BY masterdepartments.division ORDER BY masterdepartments.division\
 // '
 export var queryPieChartDboard = '\
-    SELECT masterdivisions.division AS division,  count(*) AS counter from projects \
+    SELECT masterdivisions.id AS division_id, masterdivisions.division AS division, count(*) AS counter from projects \
     LEFT JOIN masterdepartments ON projects.title_dev = masterdepartments.devTitle \
     LEFT JOIN masterdivisions ON masterdepartments.division_id = masterdivisions.id \
     WHERE projects.date_nodin_rfcitr BETWEEN date_format(curdate(), :thnpiechart) \
@@ -137,12 +137,12 @@ export var queryLchartYearBfrDboard = '\
 //     GROUP BY masterdepartments.division, masterdepartments.department ORDER BY masterdepartments.division \
 // '
 export var queryPieChartDept = '\
-    SELECT masterdivisions.division AS division, masterdepartments.department AS department,  count(*) AS counter from projects \
+    SELECT masterdivisions.division AS division, masterdepartments.id AS department_id, masterdepartments.department AS department, count(*) AS counter from projects \
     LEFT JOIN masterdepartments ON projects.title_dev = masterdepartments.devTitle \
     LEFT JOIN masterdivisions ON masterdepartments.division_id = masterdivisions.id \
     WHERE (projects.date_nodin_rfsrfi BETWEEN date_format(curdate(), :ytddept) \
     AND curdate()) and projects.pic_dev IS NOT NULL and projects.status = "done" \
-    GROUP BY masterdivisions.division, masterdepartments.department ORDER BY masterdivisions.division \
+    GROUP BY masterdivisions.division, masterdepartments.id ORDER BY masterdivisions.division \
 '
 
 //get the line chart for visualization menu
@@ -162,7 +162,7 @@ export var queryLChartDept = '\
 //     SELECT * FROM masterdepartments \
 // '
 export let queryGetMasterDivision = '\
-    SELECT masterdivisions.division AS division, masterdepartments.department AS department, masterdepartments.devTitle AS devTitle \
+    SELECT masterdivisions.division AS division, masterdepartments.id AS department_id, masterdepartments.department AS department, masterdepartments.devTitle AS devTitle \
     FROM masterdepartments LEFT JOIN masterdivisions ON masterdepartments.division_id = masterdivisions.id \
 '
 

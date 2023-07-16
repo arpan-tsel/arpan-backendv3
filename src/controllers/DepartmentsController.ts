@@ -8,11 +8,15 @@
 // - getDepartmentManagement : table department management (Read)
 
 import { Request, Response } from "express";
-import masterdepartment from '../models/masterdepartment'
-import masterdivision from '../models/masterdivision'
+import sequelize from '../config/database';
+import { QueryTypes } from 'sequelize';
 import { Op, where } from 'sequelize';
 import { Query } from 'express-serve-static-core';
 require('dotenv').config();
+
+// models
+import masterdepartment from '../models/masterdepartment'
+import masterdivision from '../models/masterdivision'
 
 //get all departments
 export const getAllDepartments = async (req: Request, res: Response) => {
@@ -146,18 +150,30 @@ export const updateDepartment = async (req: Request, res: Response) => {
 
 //delete department
 export const deleteDepartment = async (req: Request, res: Response) => {
+    const transaction = await sequelize.transaction();
     try {
+
+        await sequelize.query('SET foreign_key_checks = 0', { transaction });
+
         const departments = await masterdepartment.destroy({
             where: {
                 id: req.params.id
-            }
+            },
+            transaction,
         });
+
+        await sequelize.query('SET foreign_key_checks = 1', { transaction });
+
+        // Commit the transaction
+        await transaction.commit();
+
         // if department not found
         if (departments === 0) {
             return res.status(404).json({ message: "Department Not Found" })
         }
-        res.status(200).json({ message: "Department Deleted", departments })
+        res.status(200).json({ message: "Department Deleted" })
     } catch (error: any) {
+        await transaction.rollback();
         console.log(error);
         res.status(500).json({ message: error.message })
     }

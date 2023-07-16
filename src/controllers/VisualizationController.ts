@@ -17,6 +17,7 @@ db.sequelize = sequelize
 
 import reqDiv from '../models/reqdivs'
 import deptPieChart from "../models/deptpiechart";
+import masterdepartment from '../models/masterdepartment';
 
 var promises: any[] = [];
 
@@ -30,9 +31,21 @@ export const inputPieChartDboard = async () => {
     console.log(inputdb)
 
     inputdb.forEach(function (index: any) {
-        promises.push(reqDiv.update({ value: index.counter }, {
-            where: { division: index.division }
-        }))
+        // promises.push(reqDiv.update({ value: index.counter }, {
+        //     where: { division: index.division }
+        // }))
+
+        promises.push(
+            reqDiv.findOrCreate({
+                where: { division_id: index.division_id },
+                defaults: { value: index.counter },
+            }).then(([record, created]) => {
+                if (!created) {
+                    // Record already existed, perform the update
+                    record.update({ value: index.counter });
+                }
+            })
+        );
 
     });
     Promise.all(promises).then(function () {
@@ -109,6 +122,7 @@ export const InputLchartDept = async () => {
                 // add getMasterdivision.division to inputdb.division and getMasterdivision.department to inputdb.department
                 inputdb[i].division = getMasterdivision[j].division
                 inputdb[i].department = getMasterdivision[j].department
+                inputdb[i].department_id = getMasterdivision[j].department_id
                 break;
             }
         }
@@ -163,13 +177,13 @@ export const InputLchartDept = async () => {
         }
         if (currentDepartment == "") {
             currentDepartment = element.department
-            stringg = `("${element.division}", "${element.department}", `
+            stringg = `("${element.department_id}", `
         }
         if (currentDepartment != element.department) {
             if (currentDepartment != " ") {
                 stringg = stringg + ' '
                 try {
-                    const update = db.sequelize.query(`INSERT INTO linechartdepartments (division, department, ${monthList}) VALUES ${stringg})`, {
+                    const update = db.sequelize.query(`INSERT INTO linechartdepartments (department_id, ${monthList}) VALUES ${stringg})`, {
                         type: db.sequelize.QueryTypes.INSERT,
                         raw: true
                     });
@@ -180,7 +194,7 @@ export const InputLchartDept = async () => {
             }
             currentDepartment = element.department;
             stringg = '';
-            stringg = `("${element.division}", "${element.department}", `
+            stringg = `("${element.department_id}", `
         }
         monthList += element.month
         stringg = stringg + element.counter
@@ -188,7 +202,7 @@ export const InputLchartDept = async () => {
         if (index === arr.length - 1) {
             stringg = stringg + ' '
             try {
-                const update = db.sequelize.query(`INSERT INTO linechartdepartments (division, department, ${monthList}) VALUES ${stringg})`, {
+                const update = db.sequelize.query(`INSERT INTO linechartdepartments (department_id, ${monthList}) VALUES ${stringg})`, {
                     type: db.sequelize.QueryTypes.INSERT,
                     raw: true
                 });
@@ -383,15 +397,19 @@ export const inputPieChartDept = async () => {
                 [Op.ne]: null
             }
         }
-    })
+    });
 
     // updated the deptPieChart table with the new data based on department
     for (let i = 0; i < inputdb.length; i++) {
-        await deptPieChart.update({ counter: inputdb[i].counter }, {
-            where: {
-                department: inputdb[i].department
+        await deptPieChart.findOrCreate({
+            where: { department_id: inputdb[i].department_id },
+            defaults: { counter: inputdb[i].counter },
+        }).then(([record, created]) => {
+            if (!created) {
+                // Record already existed, perform the update
+                record.update({ counter: inputdb[i].counter });
             }
-        });
+        })
     }
 }
 
