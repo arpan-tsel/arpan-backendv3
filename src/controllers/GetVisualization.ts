@@ -57,7 +57,6 @@ export const getPieChartDivision = async (req: Request, res: Response) => {
     const { division } = req.body;
 
     try {
-
         const piechartdivision = await deptPieChart.findAll({
             include: [
                 {
@@ -70,29 +69,39 @@ export const getPieChartDivision = async (req: Request, res: Response) => {
                             as: 'masterdivision',
                             required: true,
                             where: {
-                                division: { [Op.like]: `%${division}%` }
-                            }
-                        }
-                    ]
-                }
-            ]
+                                division: { [Op.like]: `%${division}%` },
+                            },
+                        },
+                    ],
+                },
+            ],
         });
 
-        const result = piechartdivision.map((piechart) => ({
-            id: piechart.id,
-            division: piechart.masterdepartment ? piechart.masterdepartment.masterdivision.division : null,
-            department: piechart.masterdepartment ? piechart.masterdepartment.department : null,
-            counter: piechart.counter,
-        }));
+        // Group the piechartdivision based on division and department
+        const groupedResult: Record<string, any> = {};
 
-        res.json(result);
+        piechartdivision.forEach((piechart) => {
+            const { id, masterdepartment, counter } = piechart;
+            const { masterdivision, department } = masterdepartment;
+            const division = masterdivision.division;
 
+            const key = `${division}-${department}`;
+
+            if (groupedResult[key]) {
+                groupedResult[key].counter += counter;
+            } else {
+                groupedResult[key] = { id, division, department, counter };
+            }
+        });
+
+        // Convert the groupedResult object back to an array
+        const mergedResult = Object.values(groupedResult);
+
+        res.json(mergedResult);
     } catch (error: any) {
-
         res.status(500).json({ error: error.message });
-
     }
-}
+};
 
 export const getPieChartBasi = async (req: Request, res: Response) => {
     try {
@@ -195,6 +204,7 @@ export const getLineChartDivision = async (req: Request, res: Response) => {
 
     try {
         const linechartdivision = await linechartdepartment.findAll({
+            attributes: ['january', 'february', 'march', 'april', 'may', 'june', 'july', 'august', 'september', 'october', 'november', 'december'],
             include: [
                 {
                     model: masterdepartment,
@@ -206,19 +216,15 @@ export const getLineChartDivision = async (req: Request, res: Response) => {
                             as: 'masterdivision',
                             required: true,
                             where: {
-                                division: { [Op.like]: `%${division}%` }
+                                division: division,
                             }
                         }
                     ]
                 }
-            ],
-            // attributes: ['january', 'february', 'march', 'april', 'may', 'june', 'july', 'august', 'september', 'october', 'november', 'december', 'department']
+            ]
         })
 
         const result = linechartdivision.map((linechart) => ({
-            id: linechart.id,
-            division: linechart.masterdepartment ? linechart.masterdepartment.masterdivision.division : null,
-            department: linechart.masterdepartment ? linechart.masterdepartment.department : null,
             january: linechart.january,
             february: linechart.february,
             march: linechart.march,
@@ -231,6 +237,8 @@ export const getLineChartDivision = async (req: Request, res: Response) => {
             october: linechart.october,
             november: linechart.november,
             december: linechart.december,
+            department: linechart.masterdepartment ? linechart.masterdepartment.department : null,
+            id: linechart.id,
         }));
 
         res.json(result)
