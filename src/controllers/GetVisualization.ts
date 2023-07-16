@@ -28,17 +28,36 @@ import masterdepartment from "../models/masterdepartment";
 
 export const getPieChartDashboard = async (req: Request, res: Response) => {
     try {
-        const piechartdahsboard = await reqDiv.findAll()
-        res.json(piechartdahsboard)
+
+        const piechartdahsboard = await reqDiv.findAll({
+            include: {
+                model: masterdivision,
+                as: 'masterdivision',
+                required: true
+            }
+        });
+
+        const result = piechartdahsboard.map((piechart) => ({
+            id: piechart.id,
+            division: piechart.masterdivision ? piechart.masterdivision.division : null,
+            value: piechart.value
+        }));
+
+        res.json(result);
+
     } catch (error) {
+
         res.send(error)
+
     }
 }
 
 export const getPieChartDivision = async (req: Request, res: Response) => {
 
     const { division } = req.body;
+
     try {
+
         const piechartdivision = await deptPieChart.findAll({
             include: [
                 {
@@ -67,66 +86,69 @@ export const getPieChartDivision = async (req: Request, res: Response) => {
         }));
 
         res.json(result);
+
     } catch (error: any) {
+
         res.status(500).json({ error: error.message });
+
     }
 }
 
 export const getPieChartBasi = async (req: Request, res: Response) => {
     try {
-        const piechartbasi = await deptPieChart.findAll({
-            where: {
-                division: 'Business Architecture and Service Integration'
+        // set req.body.division as Business Architecture and Service Integration
+        req.body.division = 'Business Architecture and Service Integration'
+        getPieChartDivision(req, res)
 
-            }
-        })
-        res.json(piechartbasi)
     } catch (error) {
+
         res.send(error)
+
     }
 }
 
 export const getPieChartPrepaid = async (req: Request, res: Response) => {
     try {
-        const piechartprepaid = await deptPieChart.findAll({
-            where: {
-                division: 'Business Solution Management Prepaid'
-            }
-        })
-        res.json(piechartprepaid)
+
+        req.body.division = 'Business Solution Management Prepaid'
+        getPieChartDivision(req, res)
+
     } catch (error) {
+
         res.send(error)
+
     }
 }
 
 export const getPieChartDigitalVas = async (req: Request, res: Response) => {
     try {
-        const piechartDigitalVas = await deptPieChart.findAll({
-            where: {
-                division: 'Business Solution Management Digital and VAS'
-            }
-        })
-        res.json(piechartDigitalVas)
+
+        req.body.division = 'Business Solution Management Digital and VAS'
+        getPieChartDivision(req, res)
+
     } catch (error) {
+
         res.send(error)
+
     }
 }
 
 export const getPieChartPostpaid = async (req: Request, res: Response) => {
     try {
-        const piechartPostpaid = await deptPieChart.findAll({
-            where: {
-                division: 'Business Solution Management Postpaid, Roaming and Interconnect'
-            }
-        })
-        res.json(piechartPostpaid)
+
+        req.body.division = 'Business Solution Management Postpaid, Roaming and Interconnect'
+        getPieChartDivision(req, res)
+
     } catch (error) {
+
         res.send(error)
+
     }
 }
 
 export const getLineChartRFCITR = async (req: Request, res: Response) => {
     try {
+
         const linechartdashboard = await rfcitrs.findAll({
             where: {
                 [Op.or]: [{
@@ -139,27 +161,38 @@ export const getLineChartRFCITR = async (req: Request, res: Response) => {
             },
             attributes: ['january', 'february', 'march', 'april', 'may', 'june', 'july', 'august', 'september', 'october', 'november', 'december', 'year']
         })
+
         res.json(linechartdashboard)
+
     } catch (error) {
+
         res.send(error)
+
     }
 }
 
 export const getDboardTop = async (req: Request, res: Response) => {
     try {
+
         const topdboard = await dboardtop.findOne({
             where: {
                 id: 1
             }
         })
+
         res.send(topdboard)
+
     } catch (error) {
+
         res.send(error)
+
     }
 }
 
 export const getLineChartDivision = async (req: Request, res: Response) => {
+
     const { division } = req.body
+
     try {
         const linechartdivision = await linechartdepartment.findAll({
             include: [
@@ -199,68 +232,65 @@ export const getLineChartDivision = async (req: Request, res: Response) => {
             november: linechart.november,
             december: linechart.december,
         }));
+
         res.json(result)
+
     } catch (error) {
+
         res.send(error)
+
     }
 }
 
 export const getLineChartPrepaid = async (req: Request, res: Response) => {
     try {
-        const linechartprepaid = await linechartdepartment.findAll({
-            where: {
-                division: 'Business Solution Management Prepaid'
-            },
-            attributes: ['january', 'february', 'march', 'april', 'may', 'june', 'july', 'august', 'september', 'october', 'november', 'december', 'department']
-        })
-        console.log(linechartprepaid)
-        res.json(linechartprepaid)
+
+        req.body.division = 'Business Solution Management Prepaid'
+        getLineChartDivision(req, res)
+
     } catch (error) {
+
         res.send(error)
+
     }
 }
 
 export const getLineChartPostpaid = async (req: Request, res: Response) => {
     try {
-        const linechartprepaid = await linechartdepartment.findAll({
-            where: {
-                division: 'Business Solution Management Postpaid, Roaming and Interconnect'
 
-            },
-            attributes: ['january', 'february', 'march', 'april', 'may', 'june', 'july', 'august', 'september', 'october', 'november', 'december', 'department']
-        })
-        console.log(linechartprepaid)
-        res.json(linechartprepaid)
+        req.body.division = 'Business Solution Management Postpaid, Roaming and Interconnect'
+        getLineChartDivision(req, res)
+
     } catch (error) {
+
         res.send(error)
+
     }
 }
 
 
 export const getLineChartBasi = async (req: Request, res: Response) => {
     try {
-        const linechartprepaid = await linechartdepartment.findAll({
-            where: {
-                division: 'Business Architecture and Service Integration'
-            },
-            attributes: ['january', 'february', 'march', 'april', 'may', 'june', 'july', 'august', 'september', 'october', 'november', 'december', 'department']
-        })
-        res.json(linechartprepaid)
+
+        req.body.division = 'Business Architecture and Service Integration'
+        getLineChartDivision(req, res)
+
     } catch (error) {
+
         res.send(error)
+
     }
 }
 
 export const getLineChartDigitalVas = async (req: Request, res: Response) => {
     try {
-        const linechartprepaid = await linechartdepartment.findAll({
-            where: {
-                division: 'Business Solution Management Digital and VAS'
-            },
-            attributes: ['january', 'february', 'march', 'april', 'may', 'june', 'july', 'august', 'september', 'october', 'november', 'december', 'department']
-        })
-        res.json(linechartprepaid)
+
+        req.body.division = 'Business Solution Management Digital and VAS'
+        getLineChartDivision(req, res)
+
     } catch (error) {
+
         res.send(error)
+
     }
 }
