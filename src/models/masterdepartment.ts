@@ -1,13 +1,18 @@
 import { Model, DataTypes } from 'sequelize';
 import sequelize from '../config/database';
+import Division from './masterdivision'; // Import the Division model if not already imported
+
 
 class masterdepartment extends Model {
+    [x: string]: any;
     public id!: number;
+    public division_id!: number;
     public department!: string;
-    public division!: string;
     public devTitle!: string;
     public readonly createdAt!: Date;
     public readonly updatedAt!: Date;
+
+    public readonly division?: Division;
 }
 
 masterdepartment.init(
@@ -18,11 +23,11 @@ masterdepartment.init(
             autoIncrement: true,
             allowNull: false,
         },
-        department: {
-            type: DataTypes.STRING(255),
+        division_id: {
+            type: DataTypes.INTEGER,
             allowNull: false,
         },
-        division: {
+        department: {
             type: DataTypes.STRING(255),
             allowNull: false,
         },
@@ -48,5 +53,10 @@ masterdepartment.init(
         timestamps: true,
     }
 );
+
+// Define the association between masterdepartment and division
+masterdepartment.belongsTo(Division, {
+    foreignKey: 'division_id',
+});
 
 export default masterdepartment;

@@ -9,7 +9,8 @@
 
 import { Request, Response } from "express";
 import masterdepartment from '../models/masterdepartment'
-import { Op } from 'sequelize';
+import masterdivision from '../models/masterdivision'
+import { Op, where } from 'sequelize';
 import { Query } from 'express-serve-static-core';
 require('dotenv').config();
 
@@ -17,9 +18,29 @@ require('dotenv').config();
 export const getAllDepartments = async (req: Request, res: Response) => {
     try {
         const departments = await masterdepartment.findAll({
-            attributes: ['id', 'department', 'division', 'devTitle'],
+            attributes: ['id', 'department', 'devTitle'],
+            include: [
+                {
+                    model: masterdivision,
+                    attributes: ['division'],
+                    required: true,
+                }
+            ]
         });
-        res.status(200).json(departments)
+
+        if (!departments) {
+            return res.status(404).json({ message: "Departments not found" })
+        }
+
+        const formattedDepartments = departments.map((department) => ({
+            id: department.id,
+            division: department.masterdivision.division,
+            department: department.department,
+            devTitle: department.devTitle,
+        }));
+
+        res.status(200).json(formattedDepartments)
+
     } catch (error: any) {
         console.log(error);
         res.status(500).json({ message: error.message })
@@ -32,9 +53,28 @@ export const getOneDepartment = async (req: Request, res: Response) => {
         const departments = await masterdepartment.findOne({
             where: {
                 id: req.params.id
-            }
+            },
+            include: [
+                {
+                    model: masterdivision,
+                    required: true,
+                    attributes: ['division']
+                }
+            ]
         });
-        res.status(200).json(departments)
+
+        if (!departments) {
+            return res.status(404).json({ message: "Department Not Found" })
+        }
+
+        const formattedDepartments = {
+            id: departments!.id,
+            division: departments!.masterdivision.division,
+            department: departments!.department,
+            devTitle: departments!.devTitle,
+        };
+
+        res.status(200).json(formattedDepartments)
     } catch (error: any) {
         console.log(error);
         res.status(500).json({ message: error.message })
@@ -45,9 +85,19 @@ export const getOneDepartment = async (req: Request, res: Response) => {
 export const createDepartment = async (req: Request, res: Response) => {
     const { department, division, devTitle } = req.body;
     try {
+        const divisions = await masterdivision.findOne({
+            where: {
+                division: division
+            }
+        });
+        // if division not found
+        if (!divisions) {
+            return res.status(404).json({ message: "Division Not Found" })
+        }
+
         const departments = await masterdepartment.create({
+            division_id: divisions!.id,
             department: department,
-            division: division,
             devTitle: devTitle,
         });
         res.status(200).json({ message: "Department Created", departments })
@@ -61,9 +111,19 @@ export const createDepartment = async (req: Request, res: Response) => {
 export const updateDepartment = async (req: Request, res: Response) => {
     const { department, division, devTitle } = req.body;
     try {
+        const divisions = await masterdivision.findOne({
+            where: {
+                division: division
+            }
+        });
+        // if division not found
+        if (!divisions) {
+            return res.status(404).json({ message: "Division Not Found" })
+        }
+
         const departments = await masterdepartment.update({
+            division_id: divisions!.id,
             department: department,
-            division: division,
             devTitle: devTitle,
         }, {
             where: {
@@ -75,6 +135,7 @@ export const updateDepartment = async (req: Request, res: Response) => {
         if (departments[0] === 0) {
             return res.status(404).json({ message: "Department Not Found" })
         }
+
         res.status(200).json({ message: "Department Updated", departments })
     } catch (error: any) {
         console.log(error);
@@ -114,29 +175,10 @@ export const getDepartmentManagement = async (req: TypedRequestQuery<{ lastId: s
     const search = req.query.search_query || "";
     const offset = limit * page;
 
-    const totalRows = await masterdepartment.count({
+    const { count, rows: departments } = await masterdepartment.findAndCountAll({
         where: {
             [Op.or]: [{
-                division: {
-                    [Op.like]: '%' + search + '%'
-                }
-            }, {
-                department: {
-                    [Op.like]: '%' + search + '%'
-                }
-            }, {
-                devTitle: {
-                    [Op.like]: '%' + search + '%'
-                }
-            }]
-        }
-    });
-    const totalPage = Math.ceil(totalRows / limit);
-    const result = await masterdepartment.findAll({
-        raw: true,
-        where: {
-            [Op.or]: [{
-                division: {
+                '$masterdivision.division$': {  // Using the association alias to access the division table
                     [Op.like]: '%' + search + '%'
                 }
             }, {
@@ -151,16 +193,29 @@ export const getDepartmentManagement = async (req: TypedRequestQuery<{ lastId: s
         },
         offset: offset,
         limit: limit,
+        include: [
+            { model: masterdivision, as: 'masterdivision' } // Include the associated division model with alias 'masterdivision'
+        ],
         order: [
             ['id', 'ASC']
         ]
-    })
+    });
+
+    const totalPage = Math.ceil(count / limit);
+
+    const result = departments.map((department) => ({
+        id: department.id,
+        division: department.masterdivision ? department.masterdivision.division : null,
+        department: department.department,
+        devTitle: department.devTitle,
+    }));
+
 
     res.json({
         result: result,
         page: page,
         limit: limit,
-        totalRows: totalRows,
+        totalRows: count,
         totalPage: totalPage
     });
 }
