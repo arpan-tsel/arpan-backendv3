@@ -79,14 +79,16 @@ export var queryProject = '\
 
 //get data for dashboard pie chart 
 // export var queryPieChartDboard = '\
-//     SELECT masterdivisions.division,  count(*) AS counter from projects LEFT OUTER JOIN masterdivisions ON projects.title_dev = masterdivisions.devTitle  \
+//     SELECT masterdepartments.division,  count(*) AS counter from projects LEFT OUTER JOIN masterdepartments ON projects.title_dev = masterdepartments.devTitle  \
 //     WHERE projects.date_nodin_rfcitr BETWEEN date_format(curdate(), :thnpiechart) \
-//     AND curdate() GROUP BY masterdivisions.division ORDER BY masterdivisions.division\
+//     AND curdate() GROUP BY masterdepartments.division ORDER BY masterdepartments.division\
 // '
 export var queryPieChartDboard = '\
-    SELECT masterdepartments.division,  count(*) AS counter from projects LEFT OUTER JOIN masterdepartments ON projects.title_dev = masterdepartments.devTitle  \
+    SELECT masterdivisions.division AS division,  count(*) AS counter from projects \
+    LEFT JOIN masterdepartments ON projects.title_dev = masterdepartments.devTitle \
+    LEFT JOIN masterdivisions ON masterdepartments.division_id = masterdivisions.id \
     WHERE projects.date_nodin_rfcitr BETWEEN date_format(curdate(), :thnpiechart) \
-    AND curdate() GROUP BY masterdepartments.division ORDER BY masterdepartments.division\
+    AND curdate() GROUP BY masterdivisions.division ORDER BY masterdivisions.division\
 '
 
 //get data for dashboard rfs rfi
@@ -128,19 +130,19 @@ export var queryLchartYearBfrDboard = '\
 
 //get the pie chart for visualization menu
 // export var queryPieChartDept = '\
-//     SELECT masterdivisions.division, masterdivisions.department,  count(*) AS counter \
-//     from projects LEFT OUTER JOIN masterdivisions ON projects.title_dev = masterdivisions.devTitle \
+//     SELECT masterdepartments.division, masterdepartments.department,  count(*) AS counter \
+//     from projects LEFT OUTER JOIN masterdepartments ON projects.title_dev = masterdepartments.devTitle \
 //     WHERE (projects.date_nodin_rfsrfi BETWEEN date_format(curdate(), :ytddept) \
 //     AND curdate()) and projects.pic_dev IS NOT NULL and projects.status = "done" \
-//      GROUP BY masterdivisions.division, masterdivisions.department ORDER BY masterdivisions.division \
+//     GROUP BY masterdepartments.division, masterdepartments.department ORDER BY masterdepartments.division \
 // '
-
 export var queryPieChartDept = '\
-    SELECT masterdepartments.division, masterdepartments.department,  count(*) AS counter \
-    from projects LEFT OUTER JOIN masterdepartments ON projects.title_dev = masterdepartments.devTitle \
+    SELECT masterdivisions.division AS division, masterdepartments.department AS department,  count(*) AS counter from projects \
+    LEFT JOIN masterdepartments ON projects.title_dev = masterdepartments.devTitle \
+    LEFT JOIN masterdivisions ON masterdepartments.division_id = masterdivisions.id \
     WHERE (projects.date_nodin_rfsrfi BETWEEN date_format(curdate(), :ytddept) \
     AND curdate()) and projects.pic_dev IS NOT NULL and projects.status = "done" \
-     GROUP BY masterdepartments.division, masterdepartments.department ORDER BY masterdepartments.division \
+    GROUP BY masterdivisions.division, masterdepartments.department ORDER BY masterdivisions.division \
 '
 
 //get the line chart for visualization menu
@@ -156,8 +158,12 @@ export var queryLChartDept = '\
     GROUP BY title_dev, MONTH(date_nodin_rfcitr), date_nodin_rfcitr \
 '
 
+// export let queryGetMasterDivision = '\
+//     SELECT * FROM masterdepartments \
+// '
 export let queryGetMasterDivision = '\
-    SELECT * FROM masterdepartments \
+    SELECT masterdivisions.division AS division, masterdepartments.department AS department, masterdepartments.devTitle AS devTitle \
+    FROM masterdepartments LEFT JOIN masterdivisions ON masterdepartments.division_id = masterdivisions.id \
 '
 
 
