@@ -12,10 +12,13 @@
 import { Request, Response } from "express";
 import * as bcrypt from 'bcrypt'
 import * as jwt from 'jsonwebtoken'
-import useraccount from '../models/useraccount'
 import { Op } from 'sequelize';
 import { Query } from 'express-serve-static-core';
 require('dotenv').config();
+
+// models
+import useraccount from '../models/useraccount'
+import masterdepartment from "../models/masterdepartment";
 
 //get all users
 export const getAllUsers = async (req: Request, res: Response) => {
@@ -98,19 +101,31 @@ export const updateUserAccountByAdmin = async (req: Request, res: Response) => {
 
     if (req.body.role !== 'admin') return res.status(403).json({ msg: "Forbidden" });
 
-    const { name, username, role, password, employee_title, department, division, address, phone } = req.body;
+    const { name, username, role, password, employee_title, department, address, phone } = req.body;
     if (password.length < 8 || password.length > 24) return res.status(400).json({ msg: "password minimal 8 chars dan maksimal 24 chars" });
     const salt = await bcrypt.genSalt();
     const hashPassword = await bcrypt.hash(password, salt);
     try {
+        let departments;
+        if (department) {
+            departments = await masterdepartment.findOne({
+                where: {
+                    department: department
+                }
+            });
+
+            if (!departments) {
+                return res.status(400).json({ msg: "Department not found!" })
+            }
+        }
+
         const users = await useraccount.update({
             name: name,
             username: username,
             password: hashPassword,
             role: role,
             employee_title: employee_title,
-            department: department,
-            division: division,
+            department_id: departments?.id,
             address: address,
             phone: phone
         },
