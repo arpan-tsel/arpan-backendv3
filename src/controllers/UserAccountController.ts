@@ -48,12 +48,12 @@ export const getOneUser = async (req: Request, res: Response) => {
                 {
                     model: masterdepartment,
                     as: 'masterdepartment',
-                    required: true,
+                    required: false,
                     include: [
                         {
                             model: masterdivision,
                             as: 'masterdivision',
-                            required: true,
+                            required: false,
                         }
                     ]
                 }
@@ -89,12 +89,12 @@ export const getUserByIdAccount = async (req: Request, res: Response) => {
                 {
                     model: masterdepartment,
                     as: 'masterdepartment',
-                    required: true,
+                    required: false,
                     include: [
                         {
                             model: masterdivision,
                             as: 'masterdivision',
-                            required: true,
+                            required: false,
                         }
                     ]
                 }
