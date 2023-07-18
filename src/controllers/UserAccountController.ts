@@ -19,6 +19,7 @@ require('dotenv').config();
 // models
 import useraccount from '../models/useraccount'
 import masterdepartment from "../models/masterdepartment";
+import masterdivision from "../models/masterdivision";
 
 //get all users
 export const getAllUsers = async (req: Request, res: Response) => {
@@ -42,9 +43,35 @@ export const getOneUser = async (req: Request, res: Response) => {
         const users = await useraccount.findOne({
             where: {
                 refreshToken: refreshToken
-            }
+            },
+            include: [
+                {
+                    model: masterdepartment,
+                    as: 'masterdepartment',
+                    required: true,
+                    include: [
+                        {
+                            model: masterdivision,
+                            as: 'masterdivision',
+                            required: true,
+                        }
+                    ]
+                }
+            ]
         });
-        res.json(users)
+        if (!users) return res.status(404).json({ msg: "User not found!" });
+
+        const result: any = {
+            ...users.get({ plain: true }),
+            department: users.masterdepartment?.department,
+            division: users.masterdepartment?.masterdivision?.division
+        }
+
+        // remove attribute masterdepartment from result
+        delete result.masterdepartment;
+
+        res.status(200).json(result);
+        
     } catch (error) {
         console.log(error);
     }
@@ -56,9 +83,36 @@ export const getUserByIdAccount = async (req: Request, res: Response) => {
         const users = await useraccount.findOne({
             where: {
                 uuid: req.params.uuid
-            }
+            },
+            include: [
+                {
+                    model: masterdepartment,
+                    as: 'masterdepartment',
+                    required: true,
+                    include: [
+                        {
+                            model: masterdivision,
+                            as: 'masterdivision',
+                            required: true,
+                        }
+                    ]
+                }
+            ]
         });
-        res.status(200).json(users)
+
+        if (!users) return res.status(404).json({ msg: "User not found!" });
+
+        const result: any = {
+            ...users.get({ plain: true }),
+            department: users.masterdepartment?.department,
+            division: users.masterdepartment?.masterdivision?.division
+        }
+
+        // remove attribute masterdepartment from result
+        delete result.masterdepartment;
+
+        res.status(200).json(result);
+
     } catch (error) {
         res.status(500).json(error);
     }
