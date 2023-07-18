@@ -64,14 +64,15 @@ export const getOneUser = async (req: Request, res: Response) => {
         const result: any = {
             ...users.get({ plain: true }),
             department: users.masterdepartment?.department,
-            division: users.masterdepartment?.masterdivision?.division
+            division: users.masterdepartment?.masterdivision?.division,
+            sub_directorate: users.masterdepartment?.masterdivision?.sub_directorate
         }
 
         // remove attribute masterdepartment from result
         delete result.masterdepartment;
 
         res.status(200).json(result);
-        
+
     } catch (error) {
         console.log(error);
     }
@@ -105,7 +106,8 @@ export const getUserByIdAccount = async (req: Request, res: Response) => {
         const result: any = {
             ...users.get({ plain: true }),
             department: users.masterdepartment?.department,
-            division: users.masterdepartment?.masterdivision?.division
+            division: users.masterdepartment?.masterdivision?.division,
+            sub_directorate: users.masterdepartment?.masterdivision?.sub_directorate
         }
 
         // remove attribute masterdepartment from result
