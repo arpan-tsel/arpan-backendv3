@@ -199,14 +199,48 @@ export const updateUserAccountByAdmin = async (req: Request, res: Response) => {
 //update user account 
 export const updateUserAccountRegular = async (req: Request, res: Response) => {
 
+    const { name, username, employee_title, department, address, phone } = req.body;
+
     try {
-        const users = await useraccount.update(req.body,
+
+        let departments;
+        if (department) {
+            departments = await masterdepartment.findOne({
+                where: {
+                    department: department
+                }
+            });
+
+            if (!departments) {
+                return res.status(400).json({ msg: "Department not found!" })
+            }
+        }
+
+        const users = await useraccount.update({
+            name: name,
+            username: username,
+            employee_title: employee_title,
+            department_id: departments?.id,
+            address: address,
+            phone: phone
+        },
             {
                 where: {
                     uuid: req.params.uuid
                 }
-            });
+            }
+        );
+
         res.status(200).json({ msg: "User Updated" });
+
+        // const users = await useraccount.update(req.body,
+        //     {
+        //         where: {
+        //             uuid: req.params.uuid
+        //         }
+        //     });
+        // res.status(200).json({ msg: "User Updated" });
+
     } catch (error) {
         res.status(400).json({ msg: error });
     }
