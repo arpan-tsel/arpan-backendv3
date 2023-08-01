@@ -67,7 +67,8 @@ export const uploadProject = async (req: Request, res: Response) => {
           pic_tester_2: row[30],
           pic_tester_3: row[31],
           pic_tester_4: row[32],
-          pic_tester_5: row[33]
+          pic_tester_5: row[33],
+          department_id: row[34],
         };
 
 
@@ -76,7 +77,7 @@ export const uploadProject = async (req: Request, res: Response) => {
       });
 
       Project.bulkCreate(Projects, {
-        updateOnDuplicate: ['date_nodin_rfsrfi', 'subject_nodin_rfsrfi', 'status', 'detail_status', 'start_date_testing', 'end_date_testing', 'no_nodin_rfcitr', 'date_nodin_rfcitr', 'subject_nodin_rfcitr', 'aging_from_nodin', 'aging_from_testing', 'title_dev', 'pic_dev', 'divisi', 'notes_testing', 'testcase_amt', 'type_nodin', 'no_nodin_bo', 'subject_nodin_bo', 'date_nodin_bo', 'subdir_bo', 'title_bo', 'pic_bo', 'dev_effort', 'project_type', 'services', 'brand', 'pic_tester_1', 'pic_tester_2', 'pic_tester_3', 'pic_tester_4', 'pic_tester_5'],
+        updateOnDuplicate: ['date_nodin_rfsrfi', 'subject_nodin_rfsrfi', 'status', 'detail_status', 'start_date_testing', 'end_date_testing', 'no_nodin_rfcitr', 'date_nodin_rfcitr', 'subject_nodin_rfcitr', 'aging_from_nodin', 'aging_from_testing', 'title_dev', 'pic_dev', 'divisi', 'notes_testing', 'testcase_amt', 'type_nodin', 'no_nodin_bo', 'subject_nodin_bo', 'date_nodin_bo', 'subdir_bo', 'title_bo', 'pic_bo', 'dev_effort', 'project_type', 'services', 'brand', 'pic_tester_1', 'pic_tester_2', 'pic_tester_3', 'pic_tester_4', 'pic_tester_5', 'department_id'],
       }).then(() => {
         res.status(200).send({
           message: 'uploaded the file successfully: ' + req.file?.originalname,

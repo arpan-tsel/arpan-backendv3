@@ -36,6 +36,7 @@ class project extends Model {
     public pic_tester_3?: string | null;
     public pic_tester_4?: string | null;
     public pic_tester_5?: string | null;
+    public department_id?: number | null;
     public testing_progress?: string | null;
     public selection!: boolean;
 }
@@ -201,6 +202,10 @@ project.init(
         },
         pic_tester_5: {
             type: DataTypes.STRING(50),
+            defaultValue: null,
+        },
+        department_id: {
+            type: DataTypes.INTEGER,
             defaultValue: null,
         },
         testing_progress: {
