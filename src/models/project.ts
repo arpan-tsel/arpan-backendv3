@@ -16,6 +16,7 @@ class project extends Model {
     public aging_from_nodin?: number | null;
     public aging_from_testing?: number | null;
     public divison?: string | null;
+    public divisi?: string | null;
     public title_dev?: string | null;
     public pic_dev?: string | null;
     public notes_testing!: string;
@@ -122,6 +123,10 @@ project.init(
             defaultValue: null,
         },
         divison: {
+            type: DataTypes.TEXT,
+            defaultValue: null,
+        },
+        divisi: {
             type: DataTypes.TEXT,
             defaultValue: null,
         },
