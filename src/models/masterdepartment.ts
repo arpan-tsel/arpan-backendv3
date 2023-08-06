@@ -8,7 +8,6 @@ class masterdepartment extends Model {
     public id!: number;
     public division_id!: number;
     public department!: string;
-    public devTitle!: string;
     public readonly createdAt!: Date;
     public readonly updatedAt!: Date;
 
@@ -29,10 +28,6 @@ masterdepartment.init(
         },
         department: {
             type: DataTypes.STRING(255),
-            allowNull: false,
-        },
-        devTitle: {
-            type: DataTypes.TEXT,
             allowNull: false,
         },
         createdAt: {

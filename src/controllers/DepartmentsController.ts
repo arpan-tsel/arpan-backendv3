@@ -21,7 +21,7 @@ import masterdivision from '../models/masterdivision'
 export const getAllDepartments = async (req: Request, res: Response) => {
     try {
         const departments = await masterdepartment.findAll({
-            attributes: ['id', 'department', 'devTitle'],
+            attributes: ['id', 'department'],
             include: [
                 {
                     model: masterdivision,
@@ -39,7 +39,6 @@ export const getAllDepartments = async (req: Request, res: Response) => {
             id: department.id,
             division: department.masterdivision.division,
             department: department.department,
-            devTitle: department.devTitle,
         }));
 
         res.status(200).json(formattedDepartments)
@@ -74,7 +73,6 @@ export const getOneDepartment = async (req: Request, res: Response) => {
             id: departments!.id,
             division: departments!.masterdivision.division,
             department: departments!.department,
-            devTitle: departments!.devTitle,
         };
 
         res.status(200).json(formattedDepartments)
@@ -86,7 +84,7 @@ export const getOneDepartment = async (req: Request, res: Response) => {
 
 //create department
 export const createDepartment = async (req: Request, res: Response) => {
-    const { department, division, devTitle } = req.body;
+    const { department, division } = req.body;
     try {
         const divisions = await masterdivision.findOne({
             where: {
@@ -101,7 +99,6 @@ export const createDepartment = async (req: Request, res: Response) => {
         const departments = await masterdepartment.create({
             division_id: divisions!.id,
             department: department,
-            devTitle: devTitle,
         });
         res.status(200).json({ message: "Department Created", departments })
     } catch (error: any) {
@@ -112,7 +109,7 @@ export const createDepartment = async (req: Request, res: Response) => {
 
 //update department
 export const updateDepartment = async (req: Request, res: Response) => {
-    const { department, division, devTitle } = req.body;
+    const { department, division } = req.body;
     try {
         const divisions = await masterdivision.findOne({
             where: {
@@ -126,8 +123,7 @@ export const updateDepartment = async (req: Request, res: Response) => {
 
         const departments = await masterdepartment.update({
             division_id: divisions!.id,
-            department: department,
-            devTitle: devTitle,
+            department: department
         }, {
             where: {
                 id: req.params.id
@@ -178,7 +174,7 @@ export const deleteDepartment = async (req: Request, res: Response) => {
         await transaction.rollback();
         console.log(error);
         res.status(500).json({ message: error.message })
-        
+
     }
 }
 
@@ -204,10 +200,6 @@ export const getDepartmentManagement = async (req: TypedRequestQuery<{ lastId: s
                 department: {
                     [Op.like]: '%' + search + '%'
                 }
-            }, {
-                devTitle: {
-                    [Op.like]: '%' + search + '%'
-                }
             }]
         },
         offset: offset,
@@ -226,7 +218,6 @@ export const getDepartmentManagement = async (req: TypedRequestQuery<{ lastId: s
         id: department.id,
         division: department.masterdivision ? department.masterdivision.division : null,
         department: department.department,
-        devTitle: department.devTitle,
     }));
 
 

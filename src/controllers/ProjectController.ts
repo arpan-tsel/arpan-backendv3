@@ -342,49 +342,56 @@ export const getKertasKerja = async (req: TypedRequestQuery<{ lastId: string, se
   const resultRequestor = await Project.findAll({
     raw: true,
     where: {
-      [Op.and]: [{
-        [Op.or]: [
-          {
-            title_dev: {
-              [Op.like]: '%' + searchRequestor + '%'
+      [Op.and]: [
+        {
+          [Op.or]: [
+            {
+              title_dev: {
+                [Op.like]: `%${searchRequestor}%`,
+              }
+            },
+            {
+              title_dev: {
+                [Op.like]: `%${searchRequestor2}%`,
+              }
+            },
+            {
+              title_dev: {
+                [Op.like]: `%${searchRequestor3}%`,
+              }
             }
-          },
-          {
-            title_dev: {
-              [Op.like]: '%' + searchRequestor2 + '%'
-            }
-          },
-          {
-            title_dev: {
-              [Op.like]: '%' + searchRequestor3 + '%'
-            }
-          }
-        ]
-      }, {
-        [Op.or]: [
-          [
-            Sequelize.where(Sequelize.fn('MONTH', Sequelize.col('date_nodin_rfsrfi')), req.query.month1 || "-"),
-            Sequelize.where(Sequelize.fn('YEAR', Sequelize.col('date_nodin_rfsrfi')), req.query.year1 || "-")
-          ],
-          [
-            Sequelize.where(Sequelize.fn('MONTH', Sequelize.col('date_nodin_rfsrfi')), req.query.month2 || "-"),
-            Sequelize.where(Sequelize.fn('YEAR', Sequelize.col('date_nodin_rfsrfi')), req.query.year2 || "-")
-          ],
-          [
-            Sequelize.where(Sequelize.fn('MONTH', Sequelize.col('date_nodin_rfsrfi')), req.query.month3 || "-"),
-            Sequelize.where(Sequelize.fn('YEAR', Sequelize.col('date_nodin_rfsrfi')), req.query.year3 || "-")
           ]
-        ]
-
-
-      }]
+        },
+        {
+          [Op.or]: [
+            [
+              Sequelize.where(Sequelize.fn('MONTH', Sequelize.col('date_nodin_rfsrfi')), req.query.month1 || null),
+              Sequelize.where(Sequelize.fn('YEAR', Sequelize.col('date_nodin_rfsrfi')), req.query.year1 || null),
+            ],
+            [
+              Sequelize.where(Sequelize.fn('MONTH', Sequelize.col('date_nodin_rfsrfi')), req.query.month2 || null),
+              Sequelize.where(Sequelize.fn('YEAR', Sequelize.col('date_nodin_rfsrfi')), req.query.year2 || null),
+            ],
+            [
+              Sequelize.where(Sequelize.fn('MONTH', Sequelize.col('date_nodin_rfsrfi')), req.query.month3 || null),
+              Sequelize.where(Sequelize.fn('YEAR', Sequelize.col('date_nodin_rfsrfi')), req.query.year3 || null),
+            ]
+          ]
+        }
+      ]
     },
-    order: [
-      ['id_project', 'ASC']
+    order: [['id_project', 'ASC']],
+    attributes: [
+      'id_project',
+      'no_nodin_rfsrfi',
+      'date_nodin_rfsrfi',
+      'subject_nodin_rfsrfi',
+      'no_nodin_bo',
+      'no_nodin_rfcitr',
+      'selection',
     ],
-    attributes: ['id_project', 'no_nodin_rfsrfi', 'date_nodin_rfsrfi', 'subject_nodin_rfsrfi', 'no_nodin_bo',
-      'no_nodin_rfcitr', 'selection']
   })
+  console.log(resultRequestor)
   resultRequestor.forEach((datas: any) => {
     Object.keys(datas).forEach((data: any, i: any, arr: any) => {
       if (datas[data]) { datas[data] = datas[data].toString().replace(/_x000D_/g, ' ') }
@@ -404,6 +411,7 @@ export const getKertasKerja = async (req: TypedRequestQuery<{ lastId: string, se
 
 }
 
+
 //filter kertas kerja
 export const filterSelectionProject = async (req: TypedRequestQuery<{ lastId: string, search_requestor: string, search_requestor2: string, search_requestor3: string, month1: string, year1: string, month2: string, year2: string, month3: string, year3: string }>, res: Response) => {
   const searchRequestor = req.query.search_requestor || "";
@@ -416,33 +424,33 @@ export const filterSelectionProject = async (req: TypedRequestQuery<{ lastId: st
         [Op.or]: [
           {
             title_dev: {
-              [Op.like]: '%' + searchRequestor + '%'
+              [Op.like]: `%${searchRequestor}%`,
             }
           },
           {
             title_dev: {
-              [Op.like]: '%' + searchRequestor2 + '%'
+              [Op.like]: `%${searchRequestor2}%`,
             }
           },
           {
             title_dev: {
-              [Op.like]: '%' + searchRequestor3 + '%'
+              [Op.like]: `%${searchRequestor3}%`,
             }
           }
         ]
       }, {
         [Op.or]: [
           [
-            Sequelize.where(Sequelize.fn('MONTH', Sequelize.col('date_nodin_rfsrfi')), req.query.month1 || "-"),
-            Sequelize.where(Sequelize.fn('YEAR', Sequelize.col('date_nodin_rfsrfi')), req.query.year1 || "-")
+            Sequelize.where(Sequelize.fn('MONTH', Sequelize.col('date_nodin_rfsrfi')), req.query.month1 || null),
+            Sequelize.where(Sequelize.fn('YEAR', Sequelize.col('date_nodin_rfsrfi')), req.query.year1 || null),
           ],
           [
-            Sequelize.where(Sequelize.fn('MONTH', Sequelize.col('date_nodin_rfsrfi')), req.query.month2 || "-"),
-            Sequelize.where(Sequelize.fn('YEAR', Sequelize.col('date_nodin_rfsrfi')), req.query.year2 || "-")
+            Sequelize.where(Sequelize.fn('MONTH', Sequelize.col('date_nodin_rfsrfi')), req.query.month2 || null),
+            Sequelize.where(Sequelize.fn('YEAR', Sequelize.col('date_nodin_rfsrfi')), req.query.year2 || null),
           ],
           [
-            Sequelize.where(Sequelize.fn('MONTH', Sequelize.col('date_nodin_rfsrfi')), req.query.month3 || "-"),
-            Sequelize.where(Sequelize.fn('YEAR', Sequelize.col('date_nodin_rfsrfi')), req.query.year3 || "-")
+            Sequelize.where(Sequelize.fn('MONTH', Sequelize.col('date_nodin_rfsrfi')), req.query.month3 || null),
+            Sequelize.where(Sequelize.fn('YEAR', Sequelize.col('date_nodin_rfsrfi')), req.query.year3 || null),
           ]
         ]
       }, {
